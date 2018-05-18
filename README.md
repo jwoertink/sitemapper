@@ -1,6 +1,6 @@
 # sitemapper
 
-TODO: Write a description here
+Sitemapper helps you to generate sitemaps for your website. It builds [compliant XML](https://www.sitemaps.org/protocol.html) files and allows you to customize which parts of your site are indexed.
 
 ## Installation
 
@@ -16,9 +16,33 @@ dependencies:
 
 ```crystal
 require "sitemapper"
-```
 
-TODO: Write usage instructions here
+# Configure sitemapper
+Sitemapper.config do |c|
+  # Generate a sitemap_index file
+  c.use_index = true # default false
+
+  c.host = "https://yoursite.io"
+
+  # The max number of <url> elements to add to each sitemap
+  c.max_urls = 20 # default 500 
+end
+
+# Use sitemapper
+sitemaps = Sitemapper.build do
+  add("/about", changefreq: "yearly", priority: 0.1)
+  add("/profiles/somedude", changefreq: "always", priority: 0.9)
+end
+
+# Do whatever you want with these. 
+# Maybe upload to S3, or write to a file
+puts sitemaps.total #=> 4
+puts sitemaps.index #=> {"name" => "sitemap.xml", "data" => "..."}
+puts sitemaps.all   #=> [{"name" => "sitemap1.xml", "data" => ""},...]
+
+# Just have Sitemapper write them out to your public/sitemaps folder
+Sitemapper.store(sitemaps, "public/sitesmaps")
+```
 
 ## Development
 
