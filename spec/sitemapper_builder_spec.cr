@@ -2,21 +2,39 @@ require "./spec_helper"
 
 describe Sitemapper::Builder do
 
-  describe "#add/1 " do
+  describe "#add" do
     
     it "adds /tacos to the paths" do
       builder = Sitemapper::Builder.new
       builder.add("/tacos")
-      builder.paths.size.should eq 1
-      builder.paths[0].should eq({"/tacos", Sitemapper::Builder::DEFAULT_OPTIONS})
+      builder.paginator.paths.size.should eq 1
     end 
   end
 
   describe "#generate" do
-    it "generates the xml with 1 url tag" do
+    it "returns an array with 1 hash" do
       builder = Sitemapper::Builder.new
       builder.add("/tacos")
       xml = builder.generate
+      xml.size.should eq 1
+      xml[0].has_key?("name").should eq true
+      xml[0]["name"].should eq "sitemap.xml"
+    end
+
+    it "returns an array with 4 hashes" do
+      builder = Sitemapper::Builder.new(limit: 1)
+      builder.add("/tacos/1")
+      builder.add("/tacos/2")
+      builder.add("/tacos/3")
+      builder.add("/tacos/4")
+      xml = builder.generate
+      xml.size.should eq 4
+    end
+
+    it "generates some valid sitemap xml" do
+      builder = Sitemapper::Builder.new
+      builder.add("/tacos")
+      xml = builder.generate.as(Array).first["data"]
       xml.should contain <<-XML
       <?xml version="1.0" encoding="UTF-8"?>
       XML
@@ -30,11 +48,11 @@ describe Sitemapper::Builder do
       XML
     end
 
-    it "generates th xml with a video tag" do
+    it "generates the xml with a video tag data" do
       builder = Sitemapper::Builder.new
       video = Sitemapper::VideoMap.new(thumbnail_loc: "http://video.org/sample.mpg", title: "Video", description: "This is a video")
       builder.add("/tacos", video: video)
-      xml = builder.generate
+      xml = builder.generate.as(Array).first["data"]
       xml.should contain <<-XML
       <video:video>
       XML
