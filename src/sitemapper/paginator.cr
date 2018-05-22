@@ -4,14 +4,13 @@ module Sitemapper
     property paths : Array(Tuple(String, Builder::Options))
 
     def initialize(@limit : Int32 = DEFAULT_LIMIT)
-      @paths = [] of Array(Tuple(String, Builder::Options))
+      @paths = [] of Tuple(String, Builder::Options)
     end
 
     def add(path : String, options : Builder::Options)
       @paths << {path, options}  
     end
-
-    # Takes a slice of `paths` from `@offset` to `@limit`
+ 
     def items(current_page : Int32)
       offset = (current_page * @limit) - @limit
       @paths[offset, @limit]
