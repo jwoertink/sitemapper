@@ -13,9 +13,8 @@ module Sitemapper
 
     # Takes a slice of `paths` from `@offset` to `@limit`
     def items(current_page : Int32)
-      edge = current_page * @limit
-      offset = edge - @limit
-      @paths[offset...edge]
+      offset = (current_page * @limit) - @limit
+      @paths[offset, @limit]
     end
 
     # This is calculated each time since you could
