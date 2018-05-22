@@ -1,6 +1,6 @@
 # sitemapper
 
-Sitemapper helps you to generate sitemaps for your website. It builds [compliant XML](https://www.sitemaps.org/protocol.html) files and allows you to customize which parts of your site are indexed.
+Sitemapper helps you to generate sitemaps for your website. It generates [sitemap compliant XML](https://www.sitemaps.org/protocol.html), and gives you the flexibility to handle what is generated, and where you place your sitemaps.
 
 ## Installation
 
@@ -36,25 +36,39 @@ end
 
 # Do whatever you want with these. 
 # Maybe upload to S3, or write to a file
-puts sitemaps.total #=> 4
-puts sitemaps.index #=> {"name" => "sitemap.xml", "data" => "..."}
-puts sitemaps.all   #=> [{"name" => "sitemap1.xml", "data" => ""},...]
+puts typeof(sitemaps) #=> Array(Hash(String, String))
+puts sitemaps.size  #=> 4
+puts sitemaps.first #=> {"name" => "sitemap1.xml", "data" => "<?xml ..."}
 
 # Just have Sitemapper write them out to your public/sitemaps folder
 Sitemapper.store(sitemaps, "public/sitesmaps")
 ```
 
+## Adding videos to your sitemap
+
+You can add in video information which will generate the necessary XML for videos. Check out [the docs](https://developers.google.com/webmasters/videosearch/sitemaps) for all the different options you can use. 
+
+Sitemapper uses a `Sitemapper::VideoMap` object for building out video sitemap data.
+
+```crystal
+video = Sitemapper::VideoMap.new(thumbnail_loc: "http://video.org/sample.mpg", title: "Video", description: "This is a video")
+sitemaps = Sitemapper.build do
+  add("/videos/123", video: video, changefreq: "yearly")
+end
+```
+
 ## Development
 
-TODO: Write development instructions here
+Nothing fancy. Just pull down the repo, add code and make sure specs are passing.
 
 ## Contributing
 
 1. Fork it ( https://github.com/jwoertink/sitemapper/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
-3. Commit your changes (git commit -am 'Add some feature')
-4. Push to the branch (git push origin my-new-feature)
-5. Create a new Pull Request
+3. Add some specs and run `crystal spec/`
+4. Commit your changes (git commit -am 'Add some feature')
+5. Push to the branch (git push origin my-new-feature)
+6. Create a new Pull Request
 
 ## Contributors
 
