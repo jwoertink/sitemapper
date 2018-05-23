@@ -44,6 +44,14 @@ puts sitemaps.first #=> {"name" => "sitemap1.xml", "data" => "<?xml ..."}
 Sitemapper.store(sitemaps, "public/sitesmaps")
 ```
 
+You can also pass options to `build`.
+
+```crystal
+Sitemapper.build(host: "your host", max_urls: 20, use_index: true) do
+
+end
+```
+
 ## Adding videos to your sitemap
 
 You can add in video information which will generate the necessary XML for videos. Check out [the docs](https://developers.google.com/webmasters/videosearch/sitemaps) for all the different options you can use. 
@@ -56,6 +64,7 @@ sitemaps = Sitemapper.build do
   add("/videos/123", video: video, changefreq: "yearly")
 end
 ```
+
 
 ## Development
 

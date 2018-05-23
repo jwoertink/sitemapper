@@ -5,7 +5,7 @@ describe Sitemapper::Builder do
   describe "#add" do
     
     it "adds /tacos to the paths" do
-      builder = Sitemapper::Builder.new
+      builder = Sitemapper::Builder.new(host: "", max_urls: 20, use_index: true)
       builder.add("/tacos")
       builder.paginator.paths.size.should eq 1
     end 
@@ -13,7 +13,7 @@ describe Sitemapper::Builder do
 
   describe "#generate" do
     it "returns an array with 1 hash" do
-      builder = Sitemapper::Builder.new
+      builder = Sitemapper::Builder.new(host: "", max_urls: 20, use_index: true)
       builder.add("/tacos")
       xml = builder.generate
       xml.size.should eq 1
@@ -22,7 +22,7 @@ describe Sitemapper::Builder do
     end
 
     it "returns an array with 4 hashes" do
-      builder = Sitemapper::Builder.new(limit: 1)
+      builder = Sitemapper::Builder.new(host: "", max_urls: 1, use_index: true)
       builder.add("/tacos/1")
       builder.add("/tacos/2")
       builder.add("/tacos/3")
@@ -32,7 +32,7 @@ describe Sitemapper::Builder do
     end
 
     it "generates some valid sitemap xml" do
-      builder = Sitemapper::Builder.new
+      builder = Sitemapper::Builder.new(host: "http://food.com", max_urls: 100, use_index: true)
       builder.add("/tacos")
       xml = builder.generate.as(Array).first["data"]
       xml.should contain <<-XML
@@ -44,12 +44,12 @@ describe Sitemapper::Builder do
       XML
 
       xml.should contain <<-XML
-      <loc>http://example.com/tacos</loc>
+      <loc>http://food.com/tacos</loc>
       XML
     end
 
     it "generates the xml with a video tag data" do
-      builder = Sitemapper::Builder.new
+      builder = Sitemapper::Builder.new(host: "http://food.com", max_urls: 100, use_index: true)
       video = Sitemapper::VideoMap.new(thumbnail_loc: "http://video.org/sample.mpg", title: "Video", description: "This is a video")
       builder.add("/tacos", video: video)
       xml = builder.generate.as(Array).first["data"]
