@@ -65,5 +65,24 @@ describe Sitemapper::Builder do
       <video:family_friendly>yes</video:family_friendly>
       XML
     end
+
+    it "generates the xml with image tag data" do
+      builder = Sitemapper::Builder.new(host: "http://food.com", max_urls: 100, use_index: true)
+      image = Sitemapper::ImageMap.new(loc: "http://image.org/sample.jpg", caption: "This is an image")
+      builder.add("/tacos", image: image)
+      xml = builder.generate.as(Array).first["data"]
+      xml.should contain <<-XML
+      <image:image>
+      XML
+
+      xml.should contain <<-XML
+      <image:loc>http://image.org/sample.jpg</image:loc>
+      XML
+
+      xml.should contain <<-XML
+      <image:caption>This is an image</image:caption>
+      XML
+    end
+
   end
 end

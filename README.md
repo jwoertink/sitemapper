@@ -65,6 +65,7 @@ sitemaps = Sitemapper.build do
 end
 ```
 
+Same goes for in you want to add an image. Use `Sitemapper::ImageMap` and pass `add("/image/1", image: image)`. Read up more on [image sitemaps here](https://support.google.com/webmasters/answer/178636?hl=en).
 
 ## Development
 

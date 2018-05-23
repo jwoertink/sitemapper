@@ -23,6 +23,10 @@ module Sitemapper
       add(path, options.merge(video: video))
     end
 
+    def add(path : String, image : ImageMap, options : Options = DEFAULT_OPTIONS)
+      add(path, options.merge(image: image))
+    end
+
     def generate
       @paginator.total_pages.times do |page|
         filename = filename_for_page(page)
@@ -51,6 +55,9 @@ module Sitemapper
         xml.element("priority") { xml.text options[:priority].to_s }
         if options[:video]?
           options[:video].as(VideoMap).render_xml(xml)
+        end
+        if options[:image]?
+          options[:image].as(ImageMap).render_xml(xml)
         end
       end
     end
