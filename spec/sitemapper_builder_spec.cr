@@ -9,6 +9,12 @@ describe Sitemapper::Builder do
       builder.add("/tacos")
       builder.paginator.paths.size.should eq 1
     end 
+
+    it "adds /burritors with a changefreq of weekly" do
+      builder = Sitemapper::Builder.new(host: "", max_urls: 20, use_index: true)
+      builder.add("/burritos", changefreq: "weekly")
+      builder.paginator.paths.size.should eq 1 
+    end
   end
 
   describe "#generate" do

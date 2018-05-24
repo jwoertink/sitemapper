@@ -1,8 +1,5 @@
 module Sitemapper
   class Builder
-    alias Options = NamedTuple(changefreq: String, priority: Float64, lastmod: String, video: VideoMap?, image: ImageMap?)
-    
-    DEFAULT_OPTIONS = {changefreq: "daily", priority: 0.5, lastmod: Time.now.to_s("%FT%X%:z"), video: nil, image: nil}
 
     getter paginator
     
@@ -11,20 +8,9 @@ module Sitemapper
       @sitemaps = [] of Hash(String, String)
     end
 
-    def add(path : String)
-      add(path, DEFAULT_OPTIONS.as(Options))
-    end
-
-    def add(path : String, options : Options)
-      @paginator.add(path, DEFAULT_OPTIONS.merge(options))
-    end
-
-    def add(path : String, video : VideoMap, options : Options = DEFAULT_OPTIONS)
-      add(path, options.merge(video: video))
-    end
-
-    def add(path : String, image : ImageMap, options : Options = DEFAULT_OPTIONS)
-      add(path, options.merge(image: image))
+    def add(path, **kwargs)
+      options = SitemapOptions.new(**kwargs)
+      @paginator.add(path, options)
     end
 
     def generate
@@ -61,18 +47,18 @@ module Sitemapper
 
     private def build_xml_from_info(xml, info)
       path = info[0].as(String)
-      options = info[1].as(Options)
+      options = info[1].as(SitemapOptions)
 
       xml.element("url") do
         xml.element("loc") { xml.text [@host, path].join }
-        xml.element("lastmod") { xml.text options[:lastmod] }
-        xml.element("changefreq") { xml.text options[:changefreq] }
-        xml.element("priority") { xml.text options[:priority].to_s }
-        if options[:video]?
-          options[:video].as(VideoMap).render_xml(xml)
+        xml.element("lastmod") { xml.text options.lastmod.to_s }
+        xml.element("changefreq") { xml.text options.changefreq.to_s }
+        xml.element("priority") { xml.text options.priority.to_s }
+        unless options.video.nil?
+          options.video.as(VideoMap).render_xml(xml)
         end
-        if options[:image]?
-          options[:image].as(ImageMap).render_xml(xml)
+        unless options.image.nil?
+          options.image.as(ImageMap).render_xml(xml)
         end
       end
     end

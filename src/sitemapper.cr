@@ -1,8 +1,14 @@
 require "xml"
-require "./sitemapper/*"
+require "./sitemapper/config"
+require "./sitemapper/video_map"
+require "./sitemapper/image_map"
+require "./sitemapper/sitemap_options"
+require "./sitemapper/paginator"
+require "./sitemapper/builder"
 
 # TODO: Write documentation for `Sitemapper`
 module Sitemapper
+  VERSION = "0.2.2"
   @@configuration = Config.new
 
   def self.configure
