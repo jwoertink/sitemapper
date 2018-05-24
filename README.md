@@ -37,18 +37,18 @@ end
 # Do whatever you want with these. 
 # Maybe upload to S3, or write to a file
 puts typeof(sitemaps) #=> Array(Hash(String, String))
-puts sitemaps.size  #=> 4
 puts sitemaps.first #=> {"name" => "sitemap1.xml", "data" => "<?xml ..."}
 
 # Just have Sitemapper write them out to your public/sitemaps folder
-Sitemapper.store(sitemaps, "public/sitesmaps")
+# This will create ./public/sitemapes/sitemap1.xml, etc...
+Sitemapper.store(sitemaps, "./public/sitesmaps")
 ```
 
 You can also pass options to `build`.
 
 ```crystal
 Sitemapper.build(host: "your host", max_urls: 20, use_index: true) do
-
+  # add stuff here
 end
 ```
 
@@ -66,6 +66,18 @@ end
 ```
 
 Same goes for in you want to add an image. Use `Sitemapper::ImageMap` and pass `add("/image/1", image: image)`. Read up more on [image sitemaps here](https://support.google.com/webmasters/answer/178636?hl=en).
+
+## Saving your XML
+
+Sitemapper gives you the raw XML in strings. This gives you the option to save that data however you wish. Maybe you're crazy and want to store it in your DB? Maybe you're running on Heroku and can't just write locally, so you need to ship it off to AWS. What ever the case, you have that freedom. 
+
+If you just need to store it locally, you can use
+
+```crystal
+Sitemapper.store(sitemaps, "./path/to/save")
+```
+
+One thing to note about where you store your sitemaps. The sitemap index will point to _domain.com/sitemapX.xml_ if you store your sitemaps in a nested folder, you may need to do some fancy rewrites to make this url accessible. 
 
 ## Development
 
