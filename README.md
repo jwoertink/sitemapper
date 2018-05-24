@@ -48,7 +48,7 @@ You can also pass options to `build`.
 
 ```crystal
 Sitemapper.build(host: "your host", max_urls: 20, use_index: true) do
-  # add stuff here
+  add("/whatever", lastmod: Time.now)
 end
 ```
 

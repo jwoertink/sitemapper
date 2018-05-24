@@ -51,7 +51,7 @@ module Sitemapper
 
       xml.element("url") do
         xml.element("loc") { xml.text [@host, path].join }
-        xml.element("lastmod") { xml.text options.lastmod.to_s }
+        xml.element("lastmod") { xml.text options.lastmod.as(Time).to_s("%FT%X%:z") }
         xml.element("changefreq") { xml.text options.changefreq.to_s }
         xml.element("priority") { xml.text options.priority.to_s }
         unless options.video.nil?

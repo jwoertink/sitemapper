@@ -7,10 +7,10 @@ module Sitemapper
       content_loc : String? = nil,
       player_loc : String? = nil,
       duration : Int32? = nil,
-      expiration_date : String? = nil,
+      expiration_date : Time? = nil,
       rating : Float64? = nil,
       view_count : Int32? = nil,
-      publication_date : String? = nil,
+      publication_date : Time? = nil,
       family_friendly : String = "yes",      # "yes" or "no"
       tags = [] of String,
       category : String? = nil,
@@ -21,7 +21,7 @@ module Sitemapper
       uploader : String? = nil,
       platform : Tuple(String, String)? = nil,     # {"allow", "web mobile"} or {"deny", "mobile tv"}
       live : String = "no" do                # "yes" or "no"
-    
+
     def render_xml(xml : XML::Builder)
       xml.element("video:video") do
         xml.element("video:thumbnail_loc") { xml.text(thumbnail_loc) }
@@ -30,10 +30,10 @@ module Sitemapper
         xml.element("video:content_loc") { xml.text(content_loc.as(String)) } unless content_loc.nil?
         xml.element("video:player_loc") { xml.text(player_loc.as(String)) } if content_loc.nil? && !player_loc.nil?
         xml.element("video:duration") { xml.text(duration.as(Int32).to_s) } unless duration.nil?
-        xml.element("video:expiration_date") { xml.text(expiration_date.as(String)) } unless expiration_date.nil?
+        xml.element("video:expiration_date") { xml.text(expiration_date.as(Time).to_s("%FT%X%:z")) } unless expiration_date.nil?
         xml.element("video:rating") { xml.text(rating.as(Float64).to_s) } unless rating.nil?
         xml.element("video:view_count") { xml.text(view_count.as(Int32).to_s) } unless view_count.nil?
-        xml.element("video:publication_date") { xml.text(publication_date.as(String)) } unless publication_date.nil?
+        xml.element("video:publication_date") { xml.text(publication_date.as(Time).to_s("%FT%X%:z")) } unless publication_date.nil?
         xml.element("video:family_friendly") { xml.text(family_friendly) }
         tags[0, 32].each do |tag|
           xml.element("video:tag") { xml.text(tag.as(String)) }
