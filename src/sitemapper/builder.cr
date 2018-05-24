@@ -41,6 +41,21 @@ module Sitemapper
         @sitemaps << {"name" => filename, "data" => doc}
       end
 
+      if @use_index
+        doc = XML.build(indent: " ", version: "1.0", encoding: "UTF-8") do |xml|
+          xml.element("sitemapindex", xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
+            @sitemaps.each do |sm|
+              xml.element("sitemap") do
+                xml.element("loc") { [@host, sm["name"]].join('/') }
+                xml.element("lastmod") { Time.now.to_s("%FT%X%:z") }
+              end
+            end
+          end 
+        end
+        filename = "sitemap_index.xml"
+        @sitemaps << {"name" => filename, "data" => doc}
+      end
+
       @sitemaps
     end
 

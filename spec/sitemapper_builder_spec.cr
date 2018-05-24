@@ -13,7 +13,7 @@ describe Sitemapper::Builder do
 
   describe "#generate" do
     it "returns an array with 1 hash" do
-      builder = Sitemapper::Builder.new(host: "", max_urls: 20, use_index: true)
+      builder = Sitemapper::Builder.new(host: "", max_urls: 20, use_index: false)
       builder.add("/tacos")
       xml = builder.generate
       xml.size.should eq 1
@@ -28,7 +28,7 @@ describe Sitemapper::Builder do
       builder.add("/tacos/3")
       builder.add("/tacos/4")
       xml = builder.generate
-      xml.size.should eq 4
+      xml.size.should eq 5
     end
 
     it "generates some valid sitemap xml" do
