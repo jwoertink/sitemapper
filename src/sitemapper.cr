@@ -24,4 +24,11 @@ module Sitemapper
     builder.generate
   end
 
+  def self.store(sitemaps, path)
+    Dir.mkdir_p(path)
+    sitemaps.each do |sitemap|
+      File.write([path, sitemap["name"]].join('/'), sitemap["data"])
+    end
+  end
+
 end
