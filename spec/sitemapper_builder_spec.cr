@@ -56,7 +56,7 @@ describe Sitemapper::Builder do
 
     it "generates the xml with a video tag data" do
       builder = Sitemapper::Builder.new(host: "http://food.com", max_urls: 100, use_index: true)
-      video = Sitemapper::VideoMap.new(thumbnail_loc: "http://video.org/sample.mpg", title: "Video", description: "This is a video")
+      video = Sitemapper::VideoMap.new(thumbnail_loc: "http://video.org/sample.mpg", title: "Video", description: "This is a video", tags: ["red", "blue"])
       builder.add("/tacos", video: video)
       xml = builder.generate.as(Array).first["data"]
       xml.should contain <<-XML
@@ -69,6 +69,10 @@ describe Sitemapper::Builder do
 
       xml.should contain <<-XML
       <video:family_friendly>yes</video:family_friendly>
+      XML
+
+      xml.should contain <<-XML
+      <video:tag>red</video:tag>
       XML
     end
 

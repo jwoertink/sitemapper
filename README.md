@@ -56,10 +56,10 @@ end
 
 You can add in video information which will generate the necessary XML for videos. Check out [the docs](https://developers.google.com/webmasters/videosearch/sitemaps) for all the different options you can use. 
 
-Sitemapper uses a `Sitemapper::VideoMap` object for building out video sitemap data.
+Sitemapper uses a `Sitemapper::VideoMap` object for building out video sitemap data. Pretty much the attributes all map 1 to 1 except for `tag`. Use the plural `tags` as an array.
 
 ```crystal
-video = Sitemapper::VideoMap.new(thumbnail_loc: "http://video.org/sample.mpg", title: "Video", description: "This is a video")
+video = Sitemapper::VideoMap.new(thumbnail_loc: "http://video.org/sample.mpg", title: "Video", description: "This is a video", tags: ["one", "two"])
 sitemaps = Sitemapper.build do
   add("/videos/123", video: video, changefreq: "yearly")
 end

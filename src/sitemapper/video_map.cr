@@ -12,7 +12,7 @@ module Sitemapper
       view_count : Int32? = nil,
       publication_date : String? = nil,
       family_friendly : String = "yes",      # "yes" or "no"
-      tag : String? = nil,
+      tags = [] of String,
       category : String? = nil,
       restriction : String? = nil,
       gallery_loc : String? = nil,
@@ -35,7 +35,9 @@ module Sitemapper
         xml.element("video:view_count") { xml.text(view_count.as(Int32).to_s) } unless view_count.nil?
         xml.element("video:publication_date") { xml.text(publication_date.as(String)) } unless publication_date.nil?
         xml.element("video:family_friendly") { xml.text(family_friendly) }
-        xml.element("video:tag") { xml.text(tag.as(String)) } unless tag.nil?
+        tags[0, 32].each do |tag|
+          xml.element("video:tag") { xml.text(tag.as(String)) }
+        end
         xml.element("video:category") { xml.text(category.as(String)) } unless category.nil?
         xml.element("video:restriction") { xml.text(restriction.as(String)) } unless restriction.nil?
         xml.element("video:gallery_loc") { xml.text(gallery_loc.as(String)) } unless gallery_loc.nil?
