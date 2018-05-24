@@ -27,7 +27,9 @@ module Sitemapper
   def self.store(sitemaps, path)
     Dir.mkdir_p(path)
     sitemaps.each do |sitemap|
-      File.write([path, sitemap["name"]].join('/'), sitemap["data"])
+      File.open([path, sitemap["name"]].join('/'), "w") do |f|
+        f << sitemap["data"]
+      end
     end
   end
 
