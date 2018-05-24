@@ -8,7 +8,7 @@ require "./sitemapper/builder"
 
 # TODO: Write documentation for `Sitemapper`
 module Sitemapper
-  VERSION = "0.2.2"
+  VERSION = "0.2.3"
   @@configuration = Config.new
 
   def self.configure
