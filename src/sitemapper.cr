@@ -5,10 +5,11 @@ require "./sitemapper/image_map"
 require "./sitemapper/sitemap_options"
 require "./sitemapper/paginator"
 require "./sitemapper/builder"
+require "./sitemapper/storage"
 
 # TODO: Write documentation for `Sitemapper`
 module Sitemapper
-  VERSION = "0.2.3"
+  VERSION = "0.2.4"
   @@configuration = Config.new
 
   def self.configure
@@ -31,12 +32,8 @@ module Sitemapper
   end
 
   def self.store(sitemaps, path)
-    Dir.mkdir_p(path)
-    sitemaps.each do |sitemap|
-      File.open([path, sitemap["name"]].join('/'), "w") do |f|
-        f << sitemap["data"]
-      end
-    end
+    storage = Sitemapper::Storage.new(sitemaps, config.storage.as(Symbol))
+    storage.save(path) 
   end
 
 end
