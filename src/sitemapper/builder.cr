@@ -32,8 +32,8 @@ module Sitemapper
           xml.element("sitemapindex", xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
             @sitemaps.each do |sm|
               xml.element("sitemap") do
-                xml.element("loc") { [@host, sm["name"]].join('/') }
-                xml.element("lastmod") { Time.now.to_s("%FT%X%:z") }
+                xml.element("loc") { xml.text [@host, sm["name"]].join('/') }
+                xml.element("lastmod") { xml.text Time.now.to_s("%FT%X%:z") }
               end
             end
           end 
