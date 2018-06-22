@@ -26,6 +26,8 @@ Sitemapper.config do |c|
 
   # The max number of <url> elements to add to each sitemap
   c.max_urls = 20 # default 500 
+  
+  c.compress = false # default true
 end
 
 # Use sitemapper
@@ -76,6 +78,8 @@ If you just need to store it locally, you can use
 ```crystal
 Sitemapper.store(sitemaps, "./path/to/save")
 ```
+
+By default Sitemapper will compress with GZip, so your filenames will all by `sitemap.xml.gz`. You can configure to turn the compression off.
 
 One thing to note about where you store your sitemaps. The sitemap index will point to _domain.com/sitemapX.xml_ if you store your sitemaps in a nested folder, you may need to do some fancy rewrites to make this url accessible. 
 
