@@ -17,7 +17,7 @@ module Sitemapper
       @paginator.total_pages.times do |page|
         filename = filename_for_page(page)
         doc = XML.build(indent: " ", version: "1.0", encoding: "UTF-8") do |xml|
-          xml.element("urlset", xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
+          xml.element("urlset", xmlns: "https://www.sitemaps.org/schemas/sitemap/0.9") do
             @paginator.items(page + 1).each do |info|
               build_xml_from_info(xml, info)
             end
@@ -29,7 +29,7 @@ module Sitemapper
 
       if @use_index
         doc = XML.build(indent: " ", version: "1.0", encoding: "UTF-8") do |xml|
-          xml.element("sitemapindex", xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
+          xml.element("sitemapindex", xmlns: "https://www.sitemaps.org/schemas/sitemap/0.9") do
             @sitemaps.each do |sm|
               xml.element("sitemap") do
                 sitemap_name = sm["name"] + (Sitemapper.config.compress ? ".gz" : "")
