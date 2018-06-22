@@ -10,7 +10,7 @@ module Sitemapper
     def add(path : String, options : SitemapOptions)
       @paths << {path, options}
     end
- 
+
     def items(current_page : Int32)
       offset = (current_page * @limit) - @limit
       @paths[offset, @limit]

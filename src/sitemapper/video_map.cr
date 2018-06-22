@@ -1,26 +1,26 @@
 module Sitemapper
   # https://developers.google.com/webmasters/videosearch/sitemaps
-  record VideoMap, 
-      thumbnail_loc : String,
-      title : String,
-      description : String,
-      content_loc : String? = nil,
-      player_loc : String? = nil,
-      duration : Int32? = nil,
-      expiration_date : Time? = nil,
-      rating : Float64? = nil,
-      view_count : Int32? = nil,
-      publication_date : Time? = nil,
-      family_friendly : String = "yes",      # "yes" or "no"
-      tags = [] of String,
-      category : String? = nil,
-      restriction : String? = nil,
-      gallery_loc : String? = nil,
-      price : String? = nil,
-      requires_subscription : String = "no", # "yes" or "no"
-      uploader : String? = nil,
-      platform : Tuple(String, String)? = nil,     # {"allow", "web mobile"} or {"deny", "mobile tv"}
-      live : String = "no" do                # "yes" or "no"
+  record VideoMap,
+    thumbnail_loc : String,
+    title : String,
+    description : String,
+    content_loc : String? = nil,
+    player_loc : String? = nil,
+    duration : Int32? = nil,
+    expiration_date : Time? = nil,
+    rating : Float64? = nil,
+    view_count : Int32? = nil,
+    publication_date : Time? = nil,
+    family_friendly : String = "yes", # "yes" or "no"
+    tags = [] of String,
+    category : String? = nil,
+    restriction : String? = nil,
+    gallery_loc : String? = nil,
+    price : String? = nil,
+    requires_subscription : String = "no", # "yes" or "no"
+    uploader : String? = nil,
+    platform : Tuple(String, String)? = nil, # {"allow", "web mobile"} or {"deny", "mobile tv"}
+    live : String = "no" do                  # "yes" or "no"
 
     def render_xml(xml : XML::Builder)
       xml.element("video:video") do

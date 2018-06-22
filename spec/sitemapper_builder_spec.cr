@@ -1,19 +1,17 @@
 require "./spec_helper"
 
 describe Sitemapper::Builder do
-
   describe "#add" do
-    
     it "adds /tacos to the paths" do
       builder = Sitemapper::Builder.new(host: "", max_urls: 20, use_index: true)
       builder.add("/tacos")
       builder.paginator.paths.size.should eq 1
-    end 
+    end
 
     it "adds /burritors with a changefreq of weekly" do
       builder = Sitemapper::Builder.new(host: "", max_urls: 20, use_index: true)
       builder.add("/burritos", changefreq: "weekly")
-      builder.paginator.paths.size.should eq 1 
+      builder.paginator.paths.size.should eq 1
     end
   end
 
@@ -44,7 +42,7 @@ describe Sitemapper::Builder do
       xml.should contain <<-XML
       <?xml version="1.0" encoding="UTF-8"?>
       XML
-    
+
       xml.should contain <<-XML
       <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       XML
@@ -93,6 +91,5 @@ describe Sitemapper::Builder do
       <image:caption>This is an image</image:caption>
       XML
     end
-
   end
 end

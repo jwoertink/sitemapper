@@ -1,8 +1,7 @@
 module Sitemapper
   class Builder
-
     getter paginator
-    
+
     def initialize(@host : String, @max_urls : Int32, @use_index : Bool)
       @paginator = Paginator.new(limit: @max_urls)
       @sitemaps = [] of Hash(String, String)
@@ -37,7 +36,7 @@ module Sitemapper
                 xml.element("lastmod") { xml.text Time.now.to_s("%FT%X%:z") }
               end
             end
-          end 
+          end
         end
         filename = "sitemap_index.xml"
         @sitemaps << {"name" => filename, "data" => doc}
@@ -71,6 +70,5 @@ module Sitemapper
         "sitemap#{page + 1}.xml"
       end
     end
-
   end
 end

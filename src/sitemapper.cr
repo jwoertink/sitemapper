@@ -33,7 +33,6 @@ module Sitemapper
 
   def self.store(sitemaps, path)
     storage = Sitemapper::Storage.new(sitemaps, config.storage.as(Symbol))
-    storage.save(path) 
+    storage.save(path)
   end
-
 end

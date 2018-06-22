@@ -1,7 +1,6 @@
 require "./spec_helper"
 
 describe Sitemapper::Paginator do
-  
   describe "#add" do
     it "stores a path and some builder options" do
       paginator = Sitemapper::Paginator.new

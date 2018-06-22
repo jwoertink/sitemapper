@@ -9,7 +9,6 @@ def with_tempfile
 end
 
 describe Sitemapper::Storage do
-
   describe "with local storage" do
     describe "with compress" do
       it "writes sitemap.xml.gz" do
@@ -24,7 +23,7 @@ describe Sitemapper::Storage do
 
     describe "without compress" do
       it "writes sitemap.xml" do
-        Sitemapper.configure {|c| c.compress = false}
+        Sitemapper.configure { |c| c.compress = false }
         with_tempfile do
           storage = Sitemapper::Storage.new([{"name" => "sitemap.xml", "data" => "<XML></XML>"}], :local)
           storage.save("./tmp")

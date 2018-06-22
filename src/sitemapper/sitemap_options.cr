@@ -4,4 +4,3 @@ record SitemapOptions,
   lastmod : Time = Time.now,
   video : Sitemapper::VideoMap? = nil,
   image : Sitemapper::ImageMap? = nil
-  

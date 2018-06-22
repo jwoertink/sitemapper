@@ -33,6 +33,5 @@ module Sitemapper
         end
       end
     end
-
   end
 end
