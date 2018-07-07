@@ -44,7 +44,7 @@ describe Sitemapper::Builder do
       XML
 
       xml.should contain <<-XML
-      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
       XML
 
       xml.should contain <<-XML
