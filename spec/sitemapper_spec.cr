@@ -8,7 +8,6 @@ describe Sitemapper do
     end
 
     it "builds with explicit settings" do
-      puts Time.now + 14.days
       sitemaps = Sitemapper.build("host", 1, true) { add("/") }
       sitemaps.size.should eq 2
     end
