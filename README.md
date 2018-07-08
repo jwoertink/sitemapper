@@ -42,7 +42,7 @@ puts typeof(sitemaps) #=> Array(Hash(String, String))
 puts sitemaps.first #=> {"name" => "sitemap1.xml", "data" => "<?xml ..."}
 
 # Just have Sitemapper write them out to your public/sitemaps folder
-# This will create ./public/sitemapes/sitemap1.xml, etc...
+# This will create ./public/sitemaps/sitemap1.xml, etc...
 Sitemapper.store(sitemaps, "./public/sitesmaps")
 ```
 
