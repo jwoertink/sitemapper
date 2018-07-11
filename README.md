@@ -99,3 +99,4 @@ Nothing fancy. Just pull down the repo, add code and make sure specs are passing
 ## Contributors
 
 - [jwoertink](https://github.com/jwoertink) Jeremy Woertink - creator, maintainer
+- [hanneskaeufler](https://github.com/hanneskaeufler) Hannes Käufler - updates

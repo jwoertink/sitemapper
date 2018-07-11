@@ -9,7 +9,7 @@ require "./sitemapper/storage"
 
 # TODO: Write documentation for `Sitemapper`
 module Sitemapper
-  VERSION = "0.2.5"
+  VERSION = "0.3.0"
   @@configuration = Config.new
 
   def self.configure

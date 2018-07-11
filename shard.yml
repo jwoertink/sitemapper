@@ -1,9 +1,9 @@
 name: sitemapper
-version: 0.2.5
+version: 0.3.0
 
 authors:
   - Jeremy Woertink <jeremywoertink@gmail.com>
 
-crystal: 0.25.0
+crystal: 0.25.1
 
 license: MIT
