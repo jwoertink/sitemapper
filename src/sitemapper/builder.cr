@@ -33,7 +33,7 @@ module Sitemapper
           xml.element("sitemapindex", xmlns: XMLNS_SCHEMA) do
             @sitemaps.each do |sm|
               xml.element("sitemap") do
-                sitemap_name = sm["name"] + (Sitemapper.config.compress ? ".gz" : "")
+                sitemap_name = sm["name"].to_s + (Sitemapper.config.compress ? ".gz" : "")
                 xml.element("loc") { xml.text [@host, sitemap_name].join('/') }
                 xml.element("lastmod") { xml.text Time.now.to_s("%FT%X%:z") }
               end
