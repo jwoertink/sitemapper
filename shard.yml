@@ -7,3 +7,7 @@ authors:
 crystal: 0.25.1
 
 license: MIT
+
+dependencies:
+  awscr-s3:
+    github: taylorfinnell/awscr-s3

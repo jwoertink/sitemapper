@@ -33,4 +33,21 @@ describe Sitemapper::Storage do
       end
     end
   end
+
+  describe "with aws storage" do
+    it "raises an exception if not configured properly" do
+      expect_raises(Sitemapper::ConfigurationError) do
+        Sitemapper::AwsStorage.new([{"name" => "sitemap.xml", "data" => "<XML></XML>"}])
+      end
+    end
+
+    it "creates the client with proper config" do
+      Sitemapper.configure do |c| 
+        c.storage = :aws
+        c.aws_config = {"region" => "us-west-1", "key" => "AWSKEY", "secret" => "AWSSECRET"}
+      end
+      store = Sitemapper::Storage.init([{"name" => "sitemap.xml", "data" => "<XML></XML>"}], :aws)
+      store.class.should eq Sitemapper::AwsStorage
+    end
+  end
 end
