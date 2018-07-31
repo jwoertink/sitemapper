@@ -7,7 +7,6 @@ require "./sitemapper/paginator"
 require "./sitemapper/builder"
 require "./sitemapper/storage"
 
-# TODO: Write documentation for `Sitemapper`
 module Sitemapper
   VERSION = "0.3.0.1"
   @@configuration = Config.new
@@ -37,7 +36,7 @@ module Sitemapper
   end
 
   def self.store(sitemaps, path)
-    storage = Sitemapper::Storage.new(sitemaps, config.storage.as(Symbol))
+    storage = Sitemapper::Storage.init(sitemaps, config.storage.as(Symbol))
     storage.save(path)
   end
 end

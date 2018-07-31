@@ -13,7 +13,7 @@ describe Sitemapper::Storage do
     describe "with compress" do
       it "writes sitemap.xml.gz" do
         with_tempdir do |dir|
-          storage = Sitemapper::Storage.new([{"name" => "sitemap.xml", "data" => "<XML></XML>"}], :local)
+          storage = Sitemapper::Storage.init([{"name" => "sitemap.xml", "data" => "<XML></XML>"}], :local)
           storage.save(dir)
           File.exists?("#{dir}/sitemap.xml.gz").should eq true
           File.size("#{dir}/sitemap.xml.gz").should be > 1
@@ -25,7 +25,7 @@ describe Sitemapper::Storage do
       it "writes sitemap.xml" do
         Sitemapper.configure { |c| c.compress = false }
         with_tempdir do |dir|
-          storage = Sitemapper::Storage.new([{"name" => "sitemap.xml", "data" => "<XML></XML>"}], :local)
+          storage = Sitemapper::Storage.init([{"name" => "sitemap.xml", "data" => "<XML></XML>"}], :local)
           storage.save(dir)
           File.exists?("#{dir}/sitemap.xml").should eq true
           File.size("#{dir}/sitemap.xml").should be > 1
