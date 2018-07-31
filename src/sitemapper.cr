@@ -8,7 +8,7 @@ require "./sitemapper/builder"
 require "./sitemapper/storage"
 
 module Sitemapper
-  VERSION = "0.3.0.1"
+  VERSION = "0.3.1"
   @@configuration = Config.new
 
   def self.configure
