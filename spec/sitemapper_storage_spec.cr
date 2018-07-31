@@ -42,7 +42,7 @@ describe Sitemapper::Storage do
     end
 
     it "creates the client with proper config" do
-      Sitemapper.configure do |c| 
+      Sitemapper.configure do |c|
         c.storage = :aws
         c.aws_config = {"region" => "us-west-1", "key" => "AWSKEY", "secret" => "AWSSECRET"}
       end

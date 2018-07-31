@@ -11,9 +11,9 @@ module Sitemapper
         AwsStorage.new(sitemaps)
       else
         LocalStorage.new(sitemaps)
-      end 
+      end
     end
-    
+
     def initialize(@sitemaps : Sitemaps)
     end
 
