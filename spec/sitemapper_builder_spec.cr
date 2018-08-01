@@ -91,5 +91,24 @@ describe Sitemapper::Builder do
       <image:caption>This is an image</image:caption>
       XML
     end
+
+    it "generates the sitemap_index with the specified host" do
+      builder = Sitemapper::Builder.new(host: "http://food.com", max_urls: 100, use_index: true)
+      builder.add("/burgers")
+      xml = builder.generate.as(Array).find { |h| h["name"] == "sitemap_index.xml" }.as(Hash(String, String))
+      xml["data"].should contain <<-XML
+      http://food.com/sitemap.xml
+      XML
+    end
+
+    it "generates the sitemap_index with a custom sitemap host" do
+      Sitemapper.configure { |c| c.sitemap_host = "https://sitemaps.myapp.com" }
+      builder = Sitemapper::Builder.new(host: "http://food.com", max_urls: 100, use_index: true)
+      builder.add("/burgers")
+      xml = builder.generate.as(Array).find { |h| h["name"] == "sitemap_index.xml" }.as(Hash(String, String))
+      xml["data"].should contain <<-XML
+      https://sitemaps.myapp.com/sitemap.xml
+      XML
+    end 
   end
 end
