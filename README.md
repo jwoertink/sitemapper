@@ -23,6 +23,8 @@ Sitemapper.configure do |c|
   c.use_index = true # default false
 
   c.host = "https://yoursite.io"
+  
+  c.sitemap_host = "https://sitemaps.aws.whatever.com" # default nil
 
   # The max number of <url> elements to add to each sitemap
   c.max_urls = 20 # default 500 
@@ -112,6 +114,8 @@ Sitemapper.store(sitemaps, "public/sitemaps")
 
 If you're hosted somewhere like Heroku or Elasticbeanstalk then you may not have the ability to just write your flat files locally. In this case, you can use the `:aws` storage option to push the files to S3.
 
+You'll probably also want to set the `sitemap_host` option here. This is so the `sitemap_index.xml` will know where all the other sitemap files will be located.
+
 ```crystal
 Sitemapper.configure do |c|
   c.storage = :aws
@@ -122,11 +126,15 @@ Sitemapper.configure do |c|
     "key" => ENV["AWS_ACCESS_KEY"],
     "secret" => ENV["AWS_SECRET_KEY"]
   }
+
+  c.sitemap_host = "https://my-prod-bucket.s3.amazonaws.com"
 end
 
 # uploads to your bucket my-prod-bucket/sitemaps/sitemap.xml
 Sitemapper.store(sitemaps, "my-prod-bucket/sitemaps")
 ```
+
+Lastly, so the searchengines know where your sitemaps are located (unless you aliased `/sitemap_index.xml`), you'll want to update your [robots.txt](http://www.robotstxt.org/) with `Sitemap: https://my-sitemap-host.com`
 
 ## Development
 
