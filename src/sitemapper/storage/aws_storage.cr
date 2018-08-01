@@ -21,7 +21,7 @@ module Sitemapper
     # "my-prod-bucket/sitemaps/mycoolsite"
     def save(path : String)
       sitemaps.each do |sitemap|
-        client.put_object(path, sitemap["name"].to_s, sitemap["data"].to_s)
+        client.put_object(path, sitemap["name"].to_s, sitemap["data"].to_s, {"x-amz-acl" => "public-read"})
       end
     end
   end
