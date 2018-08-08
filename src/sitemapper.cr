@@ -6,6 +6,7 @@ require "./sitemapper/sitemap_options"
 require "./sitemapper/paginator"
 require "./sitemapper/builder"
 require "./sitemapper/storage"
+require "./sitemapper/ping_bot"
 
 module Sitemapper
   VERSION = "0.3.1.1"
@@ -38,5 +39,10 @@ module Sitemapper
   def self.store(sitemaps, path)
     storage = Sitemapper::Storage.init(sitemaps, config.storage.as(Symbol))
     storage.save(path)
+  end
+
+  def self.ping_search_engines(sitemap_url, **additional_engines)
+    bot = Sitemapper::PingBot.new(sitemap_url)
+    bot.ping(**additional_engines)
   end
 end
