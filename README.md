@@ -136,6 +136,26 @@ Sitemapper.store(sitemaps, "my-prod-bucket/sitemaps")
 
 Lastly, so the searchengines know where your sitemaps are located (unless you aliased `/sitemap_index.xml`), you'll want to update your [robots.txt](http://www.robotstxt.org/) with `Sitemap: https://my-sitemap-host.com`
 
+## Notifying Search Engines
+
+Once you have your sitemaps updated, it's usually a good idea to let the search engines know. Generally, they will crawl your site regularly anyway, but this at least gets things moving a little quicker. To do this, you can use the `ping_search_engines` method.
+
+```crystal
+sitemap_url = whatever_you_put_in_your_robots_txt
+Sitemapper.ping_search_engines(sitemap_url)
+
+# or
+
+Sitemapper::PingBot.new(sitemap_url).ping
+```
+
+Currently this only pings Google and Bing. However, if you wanted to ping another engine like a custom one, or maybe Yandex, you can pass that in as well.
+
+```crystal
+# be sure to include %s so we know where to place your `sitemap_url`
+Sitemapper.ping_search_engines(sitemap_url, yandex: "http://blogs.yandex.ru/pings/?status=success&url=%s")
+```
+
 ## Development
 
 Nothing fancy. Just pull down the repo, add code and make sure specs are passing.
