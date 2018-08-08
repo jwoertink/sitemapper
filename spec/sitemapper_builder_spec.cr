@@ -109,6 +109,6 @@ describe Sitemapper::Builder do
       xml["data"].should contain <<-XML
       https://sitemaps.myapp.com/sitemap.xml
       XML
-    end 
+    end
   end
 end

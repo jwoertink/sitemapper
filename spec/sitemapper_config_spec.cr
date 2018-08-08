@@ -1,7 +1,6 @@
 require "./spec_helper"
 
 describe Sitemapper::Config do
-
   describe "reset!" do
     it "resets all properties to their default state" do
       c = Sitemapper::Config.new
