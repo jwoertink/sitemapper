@@ -9,7 +9,7 @@ require "./sitemapper/storage"
 require "./sitemapper/ping_bot"
 
 module Sitemapper
-  VERSION = "0.4.0"
+  VERSION = "0.5.0"
   @@configuration = Config.new
 
   def self.configure

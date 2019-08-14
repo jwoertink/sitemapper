@@ -17,7 +17,7 @@ module Sitemapper
     def initialize(@sitemaps : Sitemaps)
     end
 
-    abstract def save(path : String)
+    abstract def save(path : String) : Void
   end
 end
 
