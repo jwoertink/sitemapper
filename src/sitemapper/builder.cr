@@ -37,7 +37,7 @@ module Sitemapper
                 sitemap_url = [(Sitemapper.config.sitemap_host || @host), sitemap_name].join('/')
 
                 xml.element("loc") { xml.text sitemap_url }
-                xml.element("lastmod") { xml.text Time.now.to_s("%FT%X%:z") }
+                xml.element("lastmod") { xml.text Time.utc.to_s("%FT%X%:z") }
               end
             end
           end

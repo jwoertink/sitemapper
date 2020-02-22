@@ -16,7 +16,7 @@ module Sitemapper
     def ping(**other_engines)
       ENGINES.merge(other_engines).each do |engine, url|
         sitemap_url = String.build do |str|
-          str << (url % URI.escape(@sitemap_index))
+          str << (url % URI.encode_www_form(@sitemap_index))
         end
         spawn {
           HTTP::Client.get(sitemap_url)

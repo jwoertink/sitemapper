@@ -23,12 +23,12 @@ Sitemapper.configure do |c|
   c.use_index = true # default false
 
   c.host = "https://yoursite.io"
-  
+
   c.sitemap_host = "https://sitemaps.aws.whatever.com" # default nil
 
   # The max number of <url> elements to add to each sitemap
-  c.max_urls = 20 # default 500 
-  
+  c.max_urls = 20 # default 500
+
   # use gzip compression?
   c.compress = false # default true
 
@@ -45,7 +45,7 @@ sitemaps = Sitemapper.build do
   add("/profiles/somedude", changefreq: "always", priority: 0.9)
 end
 
-# Do whatever you want with these. 
+# Do whatever you want with these.
 # Maybe upload to S3, or write to a file
 puts typeof(sitemaps) #=> Array(Hash(String, String))
 puts sitemaps.first #=> {"name" => "sitemap1.xml", "data" => "<?xml ..."}
@@ -59,13 +59,13 @@ You can also pass options to `build`.
 
 ```crystal
 Sitemapper.build(host: "your host", max_urls: 20, use_index: true) do
-  add("/whatever", lastmod: Time.now)
+  add("/whatever", lastmod: Time.utc)
 end
 ```
 
 ## Adding videos to your sitemap
 
-You can add in video information which will generate the necessary XML for videos. Check out [the docs](https://developers.google.com/webmasters/videosearch/sitemaps) for all the different options you can use. 
+You can add in video information which will generate the necessary XML for videos. Check out [the docs](https://developers.google.com/webmasters/videosearch/sitemaps) for all the different options you can use.
 
 Sitemapper uses a `Sitemapper::VideoMap` object for building out video sitemap data. Pretty much the attributes all map 1 to 1 except for `tag`. Use the plural `tags` as an array.
 
@@ -80,7 +80,7 @@ Same goes for in you want to add an image. Use `Sitemapper::ImageMap` and pass `
 
 ## Saving your XML
 
-Sitemapper gives you the raw XML in strings. This gives you the option to save that data however you wish. Maybe you're crazy and want to store it in your DB? Maybe you're running on Heroku and can't just write locally, so you need to ship it off to AWS. What ever the case, you have that freedom. 
+Sitemapper gives you the raw XML in strings. This gives you the option to save that data however you wish. Maybe you're crazy and want to store it in your DB? Maybe you're running on Heroku and can't just write locally, so you need to ship it off to AWS. What ever the case, you have that freedom.
 
 There's a few options you have built in. `:local`, and `:aws`. These are config options through `config.storage`
 
