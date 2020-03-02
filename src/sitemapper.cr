@@ -26,13 +26,13 @@ module Sitemapper
     # The following two lines are duplicated from self.build with a block, since
     # the "with builder yield" is not working when just delegating and passing
     # the block
-    with builder yield
+    with builder yield builder
     builder.generate
   end
 
   def self.build(host : String, max_urls : Int32, use_index : Bool)
     builder = Sitemapper::Builder.new(host, max_urls, use_index)
-    with builder yield
+    with builder yield builder
     builder.generate
   end
 

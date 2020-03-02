@@ -63,6 +63,14 @@ Sitemapper.build(host: "your host", max_urls: 20, use_index: true) do
 end
 ```
 
+You can call `build` with block argument.
+
+```crystal
+Sitemapper.build do |builder|
+  builder.add("/whatever", lastmod: Time.utc)
+end
+```
+
 ## Adding videos to your sitemap
 
 You can add in video information which will generate the necessary XML for videos. Check out [the docs](https://developers.google.com/webmasters/videosearch/sitemaps) for all the different options you can use.
