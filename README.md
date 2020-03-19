@@ -63,6 +63,15 @@ Sitemapper.build(host: "your host", max_urls: 20, use_index: true) do
 end
 ```
 
+In a bit more complex example, you may need to pass the Sitemapper instance to a separate class
+for building out your XML. In this case, you use Crystal's `itself` keyword.
+
+```crystal
+Sitemapper.build do
+  CustomSiteMapBuilder.new(itself).generate!
+end
+```
+
 ## Adding videos to your sitemap
 
 You can add in video information which will generate the necessary XML for videos. Check out [the docs](https://developers.google.com/webmasters/videosearch/sitemaps) for all the different options you can use.
