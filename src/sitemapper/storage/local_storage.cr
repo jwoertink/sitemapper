@@ -1,4 +1,4 @@
-require "gzip"
+require "compress/gzip"
 
 module Sitemapper
   class LocalStorage < Storage
@@ -23,7 +23,7 @@ module Sitemapper
 
     private def write_compressed_sitemap(path, sitemap)
       File.open([path, sitemap["name"].to_s + ".gz"].join('/'), "w") do |f|
-        Gzip::Writer.open(f) do |gzip|
+        Compress::Gzip::Writer.open(f) do |gzip|
           gzip << sitemap["data"]
         end
       end
