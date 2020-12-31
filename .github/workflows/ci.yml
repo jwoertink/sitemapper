@@ -12,12 +12,13 @@ jobs:
       matrix:
         container:
           - crystallang/crystal:latest-alpine
+          - crystallang/crystal:nightly-alpine
     runs-on: ubuntu-latest
     container: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v1
       - name: Install shards
-        run: shards install
+        run: shards install --ignore-crystal-version
       - name: Cache Crystal
         uses: actions/cache@v1
         with:
@@ -33,12 +34,13 @@ jobs:
       matrix:
         container:
           - crystallang/crystal:latest-alpine
+          - crystallang/crystal:nightly-alpine
     runs-on: ubuntu-latest
     container: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v2
       - name: Install shards
-        run: shards install
+        run: shards install --ignore-crystal-version
       - name: Cache Crystal
         uses: actions/cache@v1
         with:
