@@ -2,35 +2,47 @@ name: Sitemapper CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
     branches: "*"
 
 jobs:
   check_format:
+    strategy:
+      matrix:
+        container:
+          - crystallang/crystal:latest-alpine
     runs-on: ubuntu-latest
-    container:
-      image: crystallang/crystal:0.35.1
+    container: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v1
       - name: Install shards
         run: shards install
+      - name: Cache Crystal
+        uses: actions/cache@v1
+        with:
+          path: ~/.cache/crystal
+          key: ${{ runner.os }}-${{ matrix.container }}-crystal
       - name: Format
         run: crystal tool format --check
       - name: Lint
         run: ./bin/ameba
+
   specs:
+    strategy:
+      matrix:
+        container:
+          - crystallang/crystal:latest-alpine
     runs-on: ubuntu-latest
-    container:
-      image: crystallang/crystal:0.35.1
+    container: ${{ matrix.container }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Install shards
-      run: shards install
-    - name: Cache Crystal
-      uses: actions/cache@v1
-      with:
-        path: ~/.cache/crystal
-        key: ${{ runner.os }}-crystal
-    - name: Run tests
-      run: crystal spec
+      - uses: actions/checkout@v2
+      - name: Install shards
+        run: shards install
+      - name: Cache Crystal
+        uses: actions/cache@v1
+        with:
+          path: ~/.cache/crystal
+          key: ${{ runner.os }}-${{ matrix.container }}-crystal
+      - name: Run tests
+        run: crystal spec
