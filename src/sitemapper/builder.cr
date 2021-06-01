@@ -1,6 +1,6 @@
 module Sitemapper
   class Builder
-    XMLNS_SCHEMA = "https://www.sitemaps.org/schemas/sitemap/0.9"
+    XMLNS_SCHEMA       = "https://www.sitemaps.org/schemas/sitemap/0.9"
     XMLNS_VIDEO_SCHEMA = "http://www.google.com/schemas/sitemap-video/1.1"
     XMLNS_IMAGE_SCHEMA = "http://www.google.com/schemas/sitemap-image/1.1"
 
