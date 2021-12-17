@@ -23,7 +23,7 @@ describe Sitemapper::Storage do
 
     describe "without compress" do
       it "writes sitemap.xml" do
-        Sitemapper.configure { |c| c.compress = false }
+        Sitemapper.configure(&.compress=(false))
         with_tempdir do |dir|
           storage = Sitemapper::Storage.init([{"name" => "sitemap.xml", "data" => "<XML></XML>"}], :local)
           storage.save(dir)
@@ -45,10 +45,10 @@ describe Sitemapper::Storage do
       Sitemapper.configure do |c|
         c.storage = :aws
         c.aws_config = {
-          "region" => "us-west-1",
-          "key" => "AWSKEY",
-          "secret" => "AWSSECRET",
-          "endpoint" => "https://mycustomendpoint.s3.us-east-1.amazonaws.com/"
+          "region"   => "us-west-1",
+          "key"      => "AWSKEY",
+          "secret"   => "AWSSECRET",
+          "endpoint" => "https://mycustomendpoint.s3.us-east-1.amazonaws.com/",
         }
       end
       store = Sitemapper::Storage.init([{"name" => "sitemap.xml", "data" => "<XML></XML>"}], :aws)
