@@ -13,7 +13,8 @@ module Sitemapper
       @client = Awscr::S3::Client.new(
         region: config["region"].as(String),
         aws_access_key: config["key"].as(String),
-        aws_secret_key: config["secret"].as(String)
+        aws_secret_key: config["secret"].as(String),
+        endpoint: config["endpoint"]?
       )
     end
 

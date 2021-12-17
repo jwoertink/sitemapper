@@ -44,7 +44,12 @@ describe Sitemapper::Storage do
     it "creates the client with proper config" do
       Sitemapper.configure do |c|
         c.storage = :aws
-        c.aws_config = {"region" => "us-west-1", "key" => "AWSKEY", "secret" => "AWSSECRET"}
+        c.aws_config = {
+          "region" => "us-west-1",
+          "key" => "AWSKEY",
+          "secret" => "AWSSECRET",
+          "endpoint" => "https://mycustomendpoint.s3.us-east-1.amazonaws.com/"
+        }
       end
       store = Sitemapper::Storage.init([{"name" => "sitemap.xml", "data" => "<XML></XML>"}], :aws)
       store.class.should eq Sitemapper::AwsStorage
