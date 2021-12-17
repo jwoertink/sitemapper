@@ -20,5 +20,3 @@ module Sitemapper
     abstract def save(path : String) : Void
   end
 end
-
-require "./storage/*"
