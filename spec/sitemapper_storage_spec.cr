@@ -13,7 +13,7 @@ describe Sitemapper::Storage do
     describe "with compress" do
       it "writes sitemap.xml.gz" do
         with_tempdir do |dir|
-          storage = Sitemapper::Storage.init([{"name" => "sitemap.xml", "data" => "<XML></XML>"}], :local)
+          storage = Sitemapper::LocalStorage.new([{"name" => "sitemap.xml", "data" => "<XML></XML>"}])
           storage.save(dir)
           File.exists?("#{dir}/sitemap.xml.gz").should eq true
           File.size("#{dir}/sitemap.xml.gz").should be > 1
@@ -23,12 +23,13 @@ describe Sitemapper::Storage do
 
     describe "without compress" do
       it "writes sitemap.xml" do
-        Sitemapper.configure(&.compress=(false))
-        with_tempdir do |dir|
-          storage = Sitemapper::Storage.init([{"name" => "sitemap.xml", "data" => "<XML></XML>"}], :local)
-          storage.save(dir)
-          File.exists?("#{dir}/sitemap.xml").should eq true
-          File.size("#{dir}/sitemap.xml").should be > 1
+        Sitemapper.temp_config(compress: false) do
+          with_tempdir do |dir|
+            storage = Sitemapper::LocalStorage.new([{"name" => "sitemap.xml", "data" => "<XML></XML>"}])
+            storage.save(dir)
+            File.exists?("#{dir}/sitemap.xml").should eq true
+            File.size("#{dir}/sitemap.xml").should be > 1
+          end
         end
       end
     end
@@ -42,17 +43,13 @@ describe Sitemapper::Storage do
     end
 
     it "creates the client with proper config" do
-      Sitemapper.configure do |c|
-        c.storage = :aws
-        c.aws_config = {
-          "region"   => "us-west-1",
-          "key"      => "AWSKEY",
-          "secret"   => "AWSSECRET",
-          "endpoint" => "https://mycustomendpoint.s3.us-east-1.amazonaws.com/",
-        }
+      Sitemapper.temp_config(
+        storage: Sitemapper::AwsStorage,
+        aws_config: AwsStorageConfig.new(region: "us-west-1", key: "AWSKEY", secret: "AWSSECRET", endpoint: "https://mycustomendpoint.s3.us-east-1.amazonaws.com/")
+      ) do
+        store = Sitemapper::AwsStorage.new([{"name" => "sitemap.xml", "data" => "<XML></XML>"}])
+        store.client.should be_a Awscr::S3::Client
       end
-      store = Sitemapper::Storage.init([{"name" => "sitemap.xml", "data" => "<XML></XML>"}], :aws)
-      store.class.should eq Sitemapper::AwsStorage
     end
   end
 end
