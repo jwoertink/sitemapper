@@ -8,6 +8,7 @@ module Sitemapper
       bing:   "https://www.bing.com/webmaster/ping.aspx?siteMap=%s",
     }
 
+    # The URL to your sitemap_index file
     def initialize(@sitemap_index : String)
     end
 
@@ -18,9 +19,8 @@ module Sitemapper
         sitemap_url = String.build do |str|
           str << (url % URI.encode_www_form(@sitemap_index))
         end
-        spawn {
-          HTTP::Client.get(sitemap_url)
-        }
+
+        HTTP::Client.get(sitemap_url)
       end
     end
   end
