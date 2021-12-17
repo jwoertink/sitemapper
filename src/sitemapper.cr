@@ -1,24 +1,31 @@
 require "xml"
-require "./sitemapper/config"
+require "habitat"
+
+require "./sitemapper/errors"
 require "./sitemapper/video_map"
 require "./sitemapper/image_map"
 require "./sitemapper/sitemap_options"
 require "./sitemapper/paginator"
 require "./sitemapper/builder"
 require "./sitemapper/storage"
+require "./sitemapper/storage/*"
 require "./sitemapper/ping_bot"
 
 module Sitemapper
-  VERSION = "0.7.1"
-  @@configuration = Config.new
+  VERSION = {{ `shards version #{__DIR__}`.chomp.stringify }}
 
-  def self.configure
-    yield(@@configuration)
-    @@configuration
+  Habitat.create do
+    setting use_index : Bool = false
+    setting host : String, example: "https://mysite.com"
+    setting sitemap_host : String? = nil
+    setting max_urls : Int32 = 500
+    setting storage : Symbol = :local
+    setting compress : Bool = true
+    setting aws_config : Hash(String, String)? = nil
   end
 
   def self.config
-    @@configuration
+    Sitemapper.settings
   end
 
   def self.build
