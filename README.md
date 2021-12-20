@@ -32,17 +32,17 @@ Sitemapper.configure do |c|
   # use gzip compression?
   c.compress = false # default true
 
-  # where to store the sitemaps
-  c.storage = :aws  # default is :local
+  # which storage class to use
+  c.storage = Sitemapper::AwsStorage  # default is SiteMapper::LocalStorage
 
-  # see the aws config stuff below
-  c.aws_config = nil # default is nil but should be a Hash(String, String) when used
+  # see the aws config docs below
+  c.aws_config = AwsStorageConfig.new(...) # default is nil but should be an AwsStorageConfig when used
 end
 
 # Use sitemapper
-sitemaps = Sitemapper.build do
-  add("/about", changefreq: "yearly", priority: 0.1)
-  add("/profiles/somedude", changefreq: "always", priority: 0.9)
+sitemaps = Sitemapper.build do |builder|
+  builder.add("/about", changefreq: "yearly", priority: 0.1)
+  builder.add("/profiles/somedude", changefreq: "always", priority: 0.9)
 end
 
 # Do whatever you want with these.
@@ -58,17 +58,8 @@ Sitemapper.store(sitemaps, "./public/sitesmaps")
 You can also pass options to `build`.
 
 ```crystal
-Sitemapper.build(host: "your host", max_urls: 20, use_index: true) do
-  add("/whatever", lastmod: Time.utc)
-end
-```
-
-In a bit more complex example, you may need to pass the Sitemapper instance to a separate class
-for building out your XML. In this case, you use Crystal's `itself` keyword.
-
-```crystal
-Sitemapper.build do
-  CustomSiteMapBuilder.new(itself).generate!
+Sitemapper.build(host: "your host", max_urls: 20, use_index: true) do |builder|
+  builder.add("/whatever", lastmod: Time.utc)
 end
 ```
 
@@ -80,8 +71,8 @@ Sitemapper uses a `Sitemapper::VideoMap` object for building out video sitemap d
 
 ```crystal
 video = Sitemapper::VideoMap.new(thumbnail_loc: "http://video.org/sample.mpg", title: "Video", description: "This is a video", tags: ["one", "two"])
-sitemaps = Sitemapper.build do
-  add("/videos/123", video: video, changefreq: "yearly")
+sitemaps = Sitemapper.build do |builder|
+  builder.add("/videos/123", video: video, changefreq: "yearly")
 end
 ```
 
@@ -91,7 +82,7 @@ Same goes for in you want to add an image. Use `Sitemapper::ImageMap` and pass `
 
 Sitemapper gives you the raw XML in strings. This gives you the option to save that data however you wish. Maybe you're crazy and want to store it in your DB? Maybe you're running on Heroku and can't just write locally, so you need to ship it off to AWS. What ever the case, you have that freedom.
 
-There's a few options you have built in. `:local`, and `:aws`. These are config options through `config.storage`
+There's a few options you have built in. `LocalStorage`, and `AwsStorage`. These are config options through `config.storage`
 
 ### LocalStorage
 
@@ -99,7 +90,7 @@ By default Sitemapper will use local storage which is just writing your XML to s
 
 ```crystal
 Sitemapper.configure do |c|
-  c.storage = :local
+  # no need to configure anything extra
 end
 
 # `sitemaps` is the Array(Hash(String, String)) from above
@@ -111,7 +102,6 @@ If you would like to store these sitemaps in gzip files, you'll need to set the 
 
 ```crystal
 Sitemapper.configure do |c|
-  c.storage = :local
   c.compress = true
 end
 
@@ -121,20 +111,22 @@ Sitemapper.store(sitemaps, "public/sitemaps")
 
 ### AwsStorage
 
-If you're hosted somewhere like Heroku or Elasticbeanstalk then you may not have the ability to just write your flat files locally. In this case, you can use the `:aws` storage option to push the files to S3.
+If you're hosted somewhere like Heroku or Elasticbeanstalk then you may not have the ability to just write your flat files locally. In this case, you can use the `AwsStorage` option to push the files to S3 (or an S3 compatible location).
 
 You'll probably also want to set the `sitemap_host` option here. This is so the `sitemap_index.xml` will know where all the other sitemap files will be located.
 
 ```crystal
 Sitemapper.configure do |c|
-  c.storage = :aws
+  c.storage = Sitemapper::AwsStorage
 
   # This option is important!
-  c.aws_config = {
-    "region" => "us-west-1",
-    "key" => ENV["AWS_ACCESS_KEY"],
-    "secret" => ENV["AWS_SECRET_KEY"]
-  }
+  c.aws_config = AwsStorageConfig.new(
+    region: ENV["AWS_REGION"],
+    key: ENV["AWS_ACCESS_KEY"],
+    secret: ENV["AWS_SECRET_KEY"],
+    # Set this option only if you need an alternative host from S3, or the S3 host has changed
+    endpoint: "https://digitalocean.com/whatever"
+  )
 
   c.sitemap_host = "https://my-prod-bucket.s3.amazonaws.com"
 end
@@ -152,13 +144,9 @@ Once you have your sitemaps updated, it's usually a good idea to let the search 
 ```crystal
 sitemap_url = whatever_you_put_in_your_robots_txt
 Sitemapper.ping_search_engines(sitemap_url)
-
-# or
-
-Sitemapper::PingBot.new(sitemap_url).ping
 ```
 
-Currently this only pings Google and Bing. However, if you wanted to ping another engine like a custom one, or maybe Yandex, you can pass that in as well.
+Currently, this only pings Google and Bing. However, if you wanted to ping another engine like a custom one, or maybe Yandex, you can pass that in as well.
 
 ```crystal
 # be sure to include %s so we know where to place your `sitemap_url`

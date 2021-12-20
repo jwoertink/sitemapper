@@ -4,24 +4,25 @@ module Sitemapper
     XMLNS_VIDEO_SCHEMA = "http://www.google.com/schemas/sitemap-video/1.1"
     XMLNS_IMAGE_SCHEMA = "http://www.google.com/schemas/sitemap-image/1.1"
 
-    getter paginator
+    getter paginator : Paginator
 
     def initialize(@host : String, @max_urls : Int32, @use_index : Bool)
       @paginator = Paginator.new(limit: @max_urls)
       @sitemaps = [] of Hash(String, String)
     end
 
-    def add(path, **kwargs)
+    def add(path, **kwargs) : self
       options = SitemapOptions.new(**kwargs)
-      @paginator.add(path, options)
+      paginator.add(path, options)
+      self
     end
 
-    def generate
-      @paginator.total_pages.times do |page|
+    def generate : Array(Hash(String, String))
+      paginator.total_pages.times do |page|
         filename = filename_for_page(page)
         doc = XML.build(indent: " ", version: "1.0", encoding: "UTF-8") do |xml|
           xml.element("urlset", xmlns: XMLNS_SCHEMA, "xmlns:video": XMLNS_VIDEO_SCHEMA, "xmlns:image": XMLNS_IMAGE_SCHEMA) do
-            @paginator.items(page + 1).each do |info|
+            paginator.items(page + 1).each do |info|
               build_xml_from_info(xml, info)
             end
           end
@@ -70,7 +71,7 @@ module Sitemapper
     end
 
     private def filename_for_page(page)
-      if @paginator.total_pages == 1
+      if paginator.total_pages == 1
         "sitemap.xml"
       else
         "sitemap#{page + 1}.xml"

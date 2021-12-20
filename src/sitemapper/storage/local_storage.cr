@@ -2,7 +2,7 @@ require "compress/gzip"
 
 module Sitemapper
   class LocalStorage < Storage
-    def save(path : String) : Void
+    def save(path : String) : Nil
       Dir.mkdir_p(path)
       if Sitemapper.config.compress
         sitemaps.each do |sitemap|
