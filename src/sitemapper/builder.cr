@@ -1,8 +1,12 @@
 module Sitemapper
   class Builder
-    XMLNS_SCHEMA       = "https://www.sitemaps.org/schemas/sitemap/0.9"
+    XMLNS_SCHEMA       = "http://www.sitemaps.org/schemas/sitemap/0.9"
     XMLNS_VIDEO_SCHEMA = "http://www.google.com/schemas/sitemap-video/1.1"
     XMLNS_IMAGE_SCHEMA = "http://www.google.com/schemas/sitemap-image/1.1"
+    # See: https://sitemaps.org/protocol.html#validating
+    XMLNS_XSI                 = "http://www.w3.org/2001/XMLSchema-instance"
+    XSI_SCHEMA_LOCATION       = "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
+    XSI_INDEX_SCHEMA_LOCATION = "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd"
 
     getter paginator : Paginator
 
@@ -21,7 +25,7 @@ module Sitemapper
       paginator.total_pages.times do |page|
         filename = filename_for_page(page)
         doc = XML.build(indent: " ", version: "1.0", encoding: "UTF-8") do |xml|
-          xml.element("urlset", xmlns: XMLNS_SCHEMA, "xmlns:video": XMLNS_VIDEO_SCHEMA, "xmlns:image": XMLNS_IMAGE_SCHEMA) do
+          xml.element("urlset", xmlns: XMLNS_SCHEMA, "xmlns:video": XMLNS_VIDEO_SCHEMA, "xmlns:image": XMLNS_IMAGE_SCHEMA, "xmlns:xsi": XMLNS_XSI, "xsi:schemaLocation": XSI_SCHEMA_LOCATION) do
             paginator.items(page + 1).each do |info|
               build_xml_from_info(xml, info)
             end
@@ -33,7 +37,7 @@ module Sitemapper
 
       if @use_index
         doc = XML.build(indent: " ", version: "1.0", encoding: "UTF-8") do |xml|
-          xml.element("sitemapindex", xmlns: XMLNS_SCHEMA, "xmlns:video": XMLNS_VIDEO_SCHEMA, "xmlns:image": XMLNS_IMAGE_SCHEMA) do
+          xml.element("sitemapindex", xmlns: XMLNS_SCHEMA, "xmlns:video": XMLNS_VIDEO_SCHEMA, "xmlns:image": XMLNS_IMAGE_SCHEMA, "xmlns:xsi": XMLNS_XSI, "xsi:schemaLocation": XSI_INDEX_SCHEMA_LOCATION) do
             @sitemaps.each do |sm|
               xml.element("sitemap") do
                 sitemap_name = sm["name"].to_s + (Sitemapper.config.compress ? ".gz" : "")
