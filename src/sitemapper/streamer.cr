@@ -29,11 +29,8 @@ module Sitemapper
       storage.save(@path)
 
       @current_page += 1
-      # not sure which pair of the next 4 lines is preferred
       @sitemaps = [] of Hash(String, String)
       @paginator = Paginator.new(limit: @max_urls)
-      # @sitemaps.clear
-      # @paginator.paths.clear
     end
 
     private def filename_for_current_page
