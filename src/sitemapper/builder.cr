@@ -24,36 +24,44 @@ module Sitemapper
     def generate : Array(Hash(String, String))
       paginator.total_pages.times do |page|
         filename = filename_for_page(page)
-        doc = XML.build(indent: " ", version: "1.0", encoding: "UTF-8") do |xml|
-          xml.element("urlset", xmlns: XMLNS_SCHEMA, "xmlns:video": XMLNS_VIDEO_SCHEMA, "xmlns:image": XMLNS_IMAGE_SCHEMA, "xmlns:xsi": XMLNS_XSI, "xsi:schemaLocation": XSI_SCHEMA_LOCATION) do
-            paginator.items(page + 1).each do |info|
-              build_xml_from_info(xml, info)
-            end
-          end
-        end
+        doc = build_xml_for_page(paginator.items(page + 1))
 
         @sitemaps << {"name" => filename, "data" => doc}
       end
 
       if @use_index
-        doc = XML.build(indent: " ", version: "1.0", encoding: "UTF-8") do |xml|
-          xml.element("sitemapindex", xmlns: XMLNS_SCHEMA, "xmlns:video": XMLNS_VIDEO_SCHEMA, "xmlns:image": XMLNS_IMAGE_SCHEMA, "xmlns:xsi": XMLNS_XSI, "xsi:schemaLocation": XSI_INDEX_SCHEMA_LOCATION) do
-            @sitemaps.each do |sm|
-              xml.element("sitemap") do
-                sitemap_name = sm["name"].to_s + (Sitemapper.config.compress ? ".gz" : "")
-                sitemap_url = [(Sitemapper.config.sitemap_host || @host), sitemap_name].join('/')
-
-                xml.element("loc") { xml.text sitemap_url }
-                xml.element("lastmod") { xml.text Time.utc.to_s("%FT%X%:z") }
-              end
-            end
-          end
-        end
-        filename = "sitemap_index.xml"
-        @sitemaps << {"name" => filename, "data" => doc}
+        @sitemaps << generate_index
       end
 
       @sitemaps
+    end
+
+    def generate_index : Hash(String, String)
+      doc = XML.build(indent: " ", version: "1.0", encoding: "UTF-8") do |xml|
+        xml.element("sitemapindex", xmlns: XMLNS_SCHEMA, "xmlns:video": XMLNS_VIDEO_SCHEMA, "xmlns:image": XMLNS_IMAGE_SCHEMA, "xmlns:xsi": XMLNS_XSI, "xsi:schemaLocation": XSI_INDEX_SCHEMA_LOCATION) do
+          @sitemaps.each do |sm|
+            xml.element("sitemap") do
+              sitemap_name = sm["name"].to_s + (Sitemapper.config.compress ? ".gz" : "")
+              sitemap_url = [(Sitemapper.config.sitemap_host || @host), sitemap_name].join('/')
+
+              xml.element("loc") { xml.text sitemap_url }
+              xml.element("lastmod") { xml.text Time.utc.to_s("%FT%X%:z") }
+            end
+          end
+        end
+      end
+      filename = "sitemap_index.xml"
+      {"name" => filename, "data" => doc}
+    end
+
+    private def build_xml_for_page(items)
+      XML.build(indent: " ", version: "1.0", encoding: "UTF-8") do |xml|
+        xml.element("urlset", xmlns: XMLNS_SCHEMA, "xmlns:video": XMLNS_VIDEO_SCHEMA, "xmlns:image": XMLNS_IMAGE_SCHEMA, "xmlns:xsi": XMLNS_XSI, "xsi:schemaLocation": XSI_SCHEMA_LOCATION) do
+          items.each do |info|
+            build_xml_from_info(xml, info)
+          end
+        end
+      end
     end
 
     private def build_xml_from_info(xml, info)
