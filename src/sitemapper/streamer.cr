@@ -1,7 +1,7 @@
 module Sitemapper
   class Streamer < Builder
 
-    def initialize(@host : String, @max_urls : Int32, @use_index : Bool, @storage : Sitemapper::Storage.class, @path : String)
+    def initialize(@host : String, @max_urls : Int32, @use_index : Bool, @storage : Sitemapper::Storage.class, @storage_path : String)
       @paginator = Paginator.new(limit: @max_urls)
       @filenames = [] of String
       @sitemaps = [] of Hash(String, String)
@@ -26,7 +26,7 @@ module Sitemapper
       @filenames << filename
 
       storage = @storage.new(@sitemaps)
-      storage.save(@path)
+      storage.save(@storage_path)
 
       @current_page += 1
       @sitemaps = [] of Hash(String, String)

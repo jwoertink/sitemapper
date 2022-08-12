@@ -22,7 +22,7 @@ module Sitemapper
     setting max_urls : Int32 = 500
     setting storage : Sitemapper::Storage.class = Sitemapper::LocalStorage
     setting compress : Bool = true
-    setting path : String = "tmp/sitemaps"
+    setting storage_path : String = "tmp/sitemaps"
     setting aws_config : AwsStorageConfig? = nil
   end
 
@@ -59,9 +59,9 @@ module Sitemapper
     max_urls : Int32 = config.max_urls,
     use_index : Bool = config.use_index,
     storage : Sitemapper::Storage.class = config.storage,
-    path : String = config.path
+    storage_path : String = config.storage_path
   ) : Array(Hash(String, String))
-    builder = Sitemapper::Streamer.new(host, max_urls, use_index, storage, path)
+    builder = Sitemapper::Streamer.new(host, max_urls, use_index, storage, storage_path)
     yield builder
     builder.generate
   end
