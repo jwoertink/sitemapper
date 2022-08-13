@@ -8,6 +8,7 @@ require "./sitemapper/sitemap_options"
 require "./sitemapper/paginator"
 require "./sitemapper/builder"
 require "./sitemapper/storage"
+require "./sitemapper/streamer"
 require "./sitemapper/storage/*"
 require "./sitemapper/ping_bot"
 
@@ -21,6 +22,7 @@ module Sitemapper
     setting max_urls : Int32 = 500
     setting storage : Sitemapper::Storage.class = Sitemapper::LocalStorage
     setting compress : Bool = true
+    setting storage_path : String = "tmp/sitemaps"
     setting aws_config : AwsStorageConfig? = nil
   end
 
@@ -41,6 +43,25 @@ module Sitemapper
     use_index : Bool = config.use_index
   ) : Array(Hash(String, String))
     builder = Sitemapper::Builder.new(host, max_urls, use_index)
+    yield builder
+    builder.generate
+  end
+
+  # Build your sitemaps, streaming each file. The block arg is an instance of `Sitemapper::Streamer`.
+  # Args default to the configuration, but can be overriden.
+  # ```
+  # Sitemapper.stream(path: "tmp/sitemaps") do |builder|
+  #   builder.add("/").add("/about")
+  # end
+  # ```
+  def self.stream(
+    host : String = config.host,
+    max_urls : Int32 = config.max_urls,
+    use_index : Bool = config.use_index,
+    storage : Sitemapper::Storage.class = config.storage,
+    storage_path : String = config.storage_path
+  ) : Array(Hash(String, String))
+    builder = Sitemapper::Streamer.new(host, max_urls, use_index, storage, storage_path)
     yield builder
     builder.generate
   end
