@@ -18,7 +18,7 @@ module Sitemapper
 
     # This is calculated each time since you could
     # get 1 the first time, then add to it and get 2 the second
-    def total_pages
+    def total_pages : Int32
       (@paths.size / @limit.to_f).ceil.to_i
     end
   end
