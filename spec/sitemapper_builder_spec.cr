@@ -111,4 +111,16 @@ describe Sitemapper::Builder do
       XML
     end
   end
+
+  describe "#generate_index" do
+    it "trims the trailing slash from the host" do
+      Sitemapper.configure { |c| c.sitemap_host = "https://sitemaps.myapp.com/" }
+      builder = Sitemapper::Builder.new(host: "http://food.com", max_urls: 100, use_index: true)
+      builder.add("/burgers")
+      builder.generate
+      data = builder.generate_index
+      data["data"].should contain("https://sitemaps.myapp.com/sitemap.xml")
+      data["data"].should contain("https://sitemaps.myapp.com/sitemap_index.xml")
+    end
+  end
 end
