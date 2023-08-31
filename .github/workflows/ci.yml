@@ -2,7 +2,7 @@ name: Sitemapper CI
 
 on:
   push:
-    branches: [master]
+    branches: [ master ]
   pull_request:
     branches: "*"
 
@@ -10,18 +10,15 @@ jobs:
   check_format:
     strategy:
       fail-fast: false
-      matrix:
-        crystal_version:
-          - latest
-        experimental:
-          - false
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.experimental }}
+    continue-on-error: false
     steps:
-      - uses: actions/checkout@v3
-      - uses: crystal-lang/install-crystal@v1
+      - name: Download source
+        uses: actions/checkout@v3
+      - name: Install Crystal
+        uses: crystal-lang/install-crystal@v1
         with:
-          crystal: ${{matrix.crystal_version}}
+          crystal: latest
       - name: Install shards
         run: shards install
       - name: Format
