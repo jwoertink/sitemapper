@@ -4,9 +4,7 @@ on:
   push:
     branches: [master]
   pull_request:
-  schedule:
-    - cron: "0 0 * * MON"
-  workflow_dispatch:
+    branches: "*"
 
 jobs:
   check_format:
@@ -17,13 +15,10 @@ jobs:
           - latest
         experimental:
           - false
-        include:
-          - crystal_version: nightly
-            experimental: true
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - uses: crystal-lang/install-crystal@v1
         with:
           crystal: ${{matrix.crystal_version}}
@@ -38,23 +33,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        crystal_version:
-          - 1.1.0
-          - 1.2.0
-          - latest
-        experimental:
-          - false
+        os: [ubuntu-latest, windows-latest]
+        crystal_version: [latest]
         include:
-          - crystal_version: nightly
-            experimental: true
-    runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.experimental }}
+          - os: ubuntu-latest
+            crystal_version: 1.4.0
+    runs-on: ${{ matrix.os }}
+    continue-on-error: false
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: crystal-lang/install-crystal@v1
         with:
-          crystal: ${{matrix.crystal_version}}
-      - name: Install shards
-        run: shards install
+          crystal: ${{ matrix.crystal_version }}
+      - name: Install dependencies
+        run: shards install --skip-postinstall --skip-executables
       - name: Run tests
         run: crystal spec
