@@ -10,7 +10,7 @@ module Sitemapper
       if Sitemapper.config.aws_config.nil?
         raise Sitemapper::ConfigurationError.new("`config.storage` must be set to `Sitemapper::AwsStorage`, and `config.aws_config` must be configured with `AwsStorageConfig`")
       end
-      config = Sitemapper.config.aws_config.not_nil!
+      config = Sitemapper.config.aws_config.as(AwsStorageConfig)
       @client = Awscr::S3::Client.new(
         region: config.region,
         aws_access_key: config.key,

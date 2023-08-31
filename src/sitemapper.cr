@@ -40,7 +40,8 @@ module Sitemapper
   def self.build(
     host : String = config.host,
     max_urls : Int32 = config.max_urls,
-    use_index : Bool = config.use_index
+    use_index : Bool = config.use_index,
+    &
   ) : Array(Hash(String, String))
     builder = Sitemapper::Builder.new(host, max_urls, use_index)
     yield builder
@@ -59,7 +60,8 @@ module Sitemapper
     max_urls : Int32 = config.max_urls,
     use_index : Bool = config.use_index,
     storage : Sitemapper::Storage.class = config.storage,
-    storage_path : String = config.storage_path
+    storage_path : String = config.storage_path,
+    &
   ) : Array(Hash(String, String))
     builder = Sitemapper::Streamer.new(host, max_urls, use_index, storage, storage_path)
     yield builder
@@ -80,7 +82,7 @@ module Sitemapper
   # ```
   # Sitemapper.ping_search_engines("https://mysite.com/sitemap.xml", fake_search: "https://fake.search/ping?sitemap=%s")
   # ```
-  def self.ping_search_engines(sitemap_url : String, **additional_engines)
+  def self.ping_search_engines(sitemap_url : String, **additional_engines) : Nil
     bot = Sitemapper::PingBot.new(sitemap_url)
     bot.ping(**additional_engines)
   end

@@ -1,6 +1,5 @@
 module Sitemapper
   class Streamer < Builder
-
     def initialize(@host : String, @max_urls : Int32, @use_index : Bool, @storage : Sitemapper::Storage.class, @storage_path : String)
       @paginator = Paginator.new(limit: @max_urls)
       @filenames = [] of String
@@ -17,8 +16,7 @@ module Sitemapper
       self
     end
 
-    def flush
-      page = @current_page
+    def flush : Nil
       filename = filename_for_current_page
       doc = build_xml_for_page(paginator.items(1))
 
@@ -33,9 +31,8 @@ module Sitemapper
       @paginator = Paginator.new(limit: @max_urls)
     end
 
-    private def filename_for_current_page
+    private def filename_for_current_page : String
       "sitemap#{@current_page}.xml"
     end
-
   end
 end

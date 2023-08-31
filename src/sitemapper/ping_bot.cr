@@ -14,7 +14,7 @@ module Sitemapper
 
     # You can add other URLs like
     # ping(yandex: "http://blogs.yandex.ru/pings/?status=success&url=%s")
-    def ping(**other_engines)
+    def ping(**other_engines) : Nil
       ENGINES.merge(other_engines).each do |_engine, url|
         sitemap_url = String.build do |str|
           str << (url % URI.encode_www_form(@sitemap_index))
