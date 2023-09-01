@@ -42,7 +42,7 @@ module Sitemapper
           @sitemaps.each do |sm|
             xml.element("sitemap") do
               sitemap_name = sm["name"].to_s + (Sitemapper.config.compress ? ".gz" : "")
-              sitemap_url = [(Sitemapper.config.sitemap_host || @host), sitemap_name].join('/')
+              sitemap_url = [host_for_sitemap, sitemap_name].join('/')
 
               xml.element("loc") { xml.text sitemap_url }
               xml.element("lastmod") { xml.text Time.utc.to_s("%FT%X%:z") }
@@ -52,6 +52,10 @@ module Sitemapper
       end
       filename = "sitemap_index.xml"
       {"name" => filename, "data" => doc}
+    end
+
+    private def host_for_sitemap : String
+      (Sitemapper.config.sitemap_host || @host).chomp('/')
     end
 
     private def build_xml_for_page(items)
