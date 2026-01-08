@@ -26,6 +26,8 @@ Sitemapper.configure do |c|
 
   c.sitemap_host = "https://sitemaps.aws.whatever.com" # default nil
 
+  c.file_name = "my_sitemap" # default "sitemap"
+
   # The max number of <url> elements to add to each sitemap
   c.max_urls = 20 # default 500
 

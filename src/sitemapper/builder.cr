@@ -88,9 +88,9 @@ module Sitemapper
 
     private def filename_for_page(page)
       if paginator.total_pages == 1
-        "sitemap.xml"
+        Sitemapper.config.file_name + ".xml"
       else
-        "sitemap#{page + 1}.xml"
+        Sitemapper.config.file_name + "#{page + 1}.xml"
       end
     end
   end
