@@ -1,15 +1,15 @@
 require "./spec_helper"
 
-describe Sitemapper::Builder do
+describe Sitemapper::InMemoryBuilder do
   describe "#add" do
     it "adds /tacos to the paths" do
-      builder = Sitemapper::Builder.new(host: "", max_urls: 20, use_index: true)
+      builder = Sitemapper::InMemoryBuilder.new(host: "", max_urls: 20, use_index: true)
       builder.add("/tacos")
       builder.paginator.paths.size.should eq 1
     end
 
     it "adds /burritors with a changefreq of weekly" do
-      builder = Sitemapper::Builder.new(host: "", max_urls: 20, use_index: true)
+      builder = Sitemapper::InMemoryBuilder.new(host: "", max_urls: 20, use_index: true)
       builder.add("/burritos", changefreq: "weekly")
       builder.paginator.paths.size.should eq 1
     end
@@ -17,7 +17,7 @@ describe Sitemapper::Builder do
 
   describe "#generate" do
     it "returns an array with 1 hash" do
-      builder = Sitemapper::Builder.new(host: "", max_urls: 20, use_index: false)
+      builder = Sitemapper::InMemoryBuilder.new(host: "", max_urls: 20, use_index: false)
       builder.add("/tacos")
       xml = builder.generate
       xml.size.should eq 1
@@ -26,7 +26,7 @@ describe Sitemapper::Builder do
     end
 
     it "returns an array with 4 hashes" do
-      builder = Sitemapper::Builder.new(host: "", max_urls: 1, use_index: true)
+      builder = Sitemapper::InMemoryBuilder.new(host: "", max_urls: 1, use_index: true)
       builder.add("/tacos/1")
       builder.add("/tacos/2")
       builder.add("/tacos/3")
@@ -36,7 +36,7 @@ describe Sitemapper::Builder do
     end
 
     it "generates some valid sitemap xml" do
-      builder = Sitemapper::Builder.new(host: "http://food.com", max_urls: 100, use_index: true)
+      builder = Sitemapper::InMemoryBuilder.new(host: "http://food.com", max_urls: 100, use_index: true)
       builder.add("/tacos")
       xml = builder.generate.as(Array).first["data"]
       xml.should contain <<-XML
@@ -53,7 +53,7 @@ describe Sitemapper::Builder do
     end
 
     it "generates the xml with a video tag data" do
-      builder = Sitemapper::Builder.new(host: "http://food.com", max_urls: 100, use_index: true)
+      builder = Sitemapper::InMemoryBuilder.new(host: "http://food.com", max_urls: 100, use_index: true)
       video = Sitemapper::VideoMap.new(thumbnail_loc: "http://video.org/sample.mpg", title: "Video", description: "This is a video", tags: ["red", "blue"])
       builder.add("/tacos", video: video)
       xml = builder.generate.as(Array).first["data"]
@@ -75,7 +75,7 @@ describe Sitemapper::Builder do
     end
 
     it "generates the xml with image tag data" do
-      builder = Sitemapper::Builder.new(host: "http://food.com", max_urls: 100, use_index: true)
+      builder = Sitemapper::InMemoryBuilder.new(host: "http://food.com", max_urls: 100, use_index: true)
       image = Sitemapper::ImageMap.new(loc: "http://image.org/sample.jpg", caption: "This is an image")
       builder.add("/tacos", image: image)
       xml = builder.generate.as(Array).first["data"]
@@ -93,7 +93,7 @@ describe Sitemapper::Builder do
     end
 
     it "generates the sitemap_index with the specified host" do
-      builder = Sitemapper::Builder.new(host: "http://food.com", max_urls: 100, use_index: true)
+      builder = Sitemapper::InMemoryBuilder.new(host: "http://food.com", max_urls: 100, use_index: true)
       builder.add("/burgers")
       xml = builder.generate.as(Array).find { |h| h["name"] == "sitemap_index.xml" }.as(Hash(String, String))
       xml["data"].should contain <<-XML
@@ -103,7 +103,7 @@ describe Sitemapper::Builder do
 
     it "generates the sitemap_index with a custom sitemap host" do
       Sitemapper.configure { |c| c.sitemap_host = "https://sitemaps.myapp.com" }
-      builder = Sitemapper::Builder.new(host: "http://food.com", max_urls: 100, use_index: true)
+      builder = Sitemapper::InMemoryBuilder.new(host: "http://food.com", max_urls: 100, use_index: true)
       builder.add("/burgers")
       xml = builder.generate.as(Array).find { |h| h["name"] == "sitemap_index.xml" }.as(Hash(String, String))
       xml["data"].should contain <<-XML
