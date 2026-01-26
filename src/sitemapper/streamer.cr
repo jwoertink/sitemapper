@@ -16,6 +16,11 @@ module Sitemapper
       self
     end
 
+    def index_add(path) : self
+      paginator.index_add(path)
+      self
+    end
+
     def flush : Nil
       filename = filename_for_current_page
       doc = build_xml_for_page(paginator.items(1))
@@ -32,7 +37,7 @@ module Sitemapper
     end
 
     private def filename_for_current_page : String
-      "sitemap#{@current_page}.xml"
+      Sitemapper.config.sitemap_file_name + "#{@current_page}.xml"
     end
   end
 end
