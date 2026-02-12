@@ -26,6 +26,10 @@ Sitemapper.configure do |c|
 
   c.sitemap_host = "https://sitemaps.aws.whatever.com" # default nil
 
+  c.index_file_name = "my_index_file_name" # default "sitemap_index"
+
+  c.sitemap_file_name = "my_file_name" # default "sitemap" 
+
   # The max number of <url> elements to add to each sitemap
   c.max_urls = 20 # default 500
 
@@ -80,9 +84,11 @@ Same goes for in you want to add an image. Use `Sitemapper::ImageMap` and pass `
 
 ## Saving your XML
 
-Sitemapper gives you the raw XML in strings. This gives you the option to save that data however you wish. Maybe you're crazy and want to store it in your DB? Maybe you're running on Heroku and can't just write locally, so you need to ship it off to AWS. What ever the case, you have that freedom.
+`Sitemapper.build` gives you the raw XML in strings. This gives you the option to save that data however you wish. Maybe you're crazy and want to store it in your DB? Maybe you're running on Heroku and can't just write locally, so you need to ship it off to AWS. Whatever the case, you have that freedom.
 
-There's a few options you have built in. `LocalStorage`, and `AwsStorage`. These are config options through `config.storage`
+There's a few options you have built in. `LocalStorage`, and `AwsStorage`. These are config options through `config.storage`.
+
+You can also use `Sitemapper.stream` to save the XML data one file at a time. This is useful for very large sitemaps which wouldn't fit in memory. This option won't return XML, and will instead use whatever storage (e.g. `LocalStorage` or `AwsStorage`) you have configured.
 
 ### LocalStorage
 
@@ -136,6 +142,19 @@ Sitemapper.store(sitemaps, "my-prod-bucket/sitemaps")
 ```
 
 Lastly, so the searchengines know where your sitemaps are located (unless you aliased `/sitemap_index.xml`), you'll want to update your [robots.txt](http://www.robotstxt.org/) with `Sitemap: https://my-sitemap-host.com`
+
+### Storing files one at a time
+
+Use `Sitemapper.stream` in place of `Sitemapper.build` to save files one at a time. For example:
+
+```crystal
+Sitemapper.stream do |builder|
+  builder.add("/about", changefreq: "yearly", priority: 0.1)
+  builder.add("/profiles/somedude", changefreq: "always", priority: 0.9)
+end
+```
+
+`Sitemapper.stream` accepts optional arguments for `host`, `max_url`, `use_index`, `storage`, and `storage_path`.All of them default to the options saved inside `Sitemapper.configure`.
 
 ## Notifying Search Engines
 
