@@ -30,7 +30,7 @@ module Sitemapper
     end
 
     def flush
-      filename = filename_for_current_page
+      filename = filename_for_page(@current_page)
       doc = build_xml_for_page(paginator.items(1))
       @filenames << filename
 
@@ -42,6 +42,10 @@ module Sitemapper
     end
 
     def finish : Void
+      unless paginator.paths.empty?
+        flush
+      end
+
       if @use_index
         save_index
       end
@@ -53,8 +57,8 @@ module Sitemapper
       storage.save(@storage_path)
     end
 
-    private def filename_for_current_page
-      Sitemapper.config.sitemap_file_name + "#{@current_page}.xml"
+    private def filename_for_page(page)
+      Sitemapper.config.sitemap_file_name + "#{page}.xml"
     end
   end
 end
