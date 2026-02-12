@@ -31,7 +31,7 @@ module Sitemapper
 
     def flush
       filename = filename_for_current_page
-      doc = build_xml_for_page(paginator.items(page))
+      doc = build_xml_for_page(paginator.items(1))
       @filenames << filename
 
       storage = @storage.new([{"name" => filename, "data" => doc}])
