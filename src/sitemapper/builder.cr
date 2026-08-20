@@ -7,7 +7,8 @@ module Sitemapper
     XMLNS_XSI                 = "http://www.w3.org/2001/XMLSchema-instance"
     XSI_SCHEMA_LOCATION       = "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
     XSI_INDEX_SCHEMA_LOCATION = "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd"
-    DEFAULT_INDEX_FILENAME    = "sitemap_index.xml"
+    DEFAULT_SITEMAP_FILENAME  = "sitemap"
+    DEFAULT_INDEX_FILENAME    = "sitemap_index"
 
     getter paginator : Paginator
 
@@ -46,8 +47,7 @@ module Sitemapper
         xml.element("sitemapindex", xmlns: XMLNS_SCHEMA, "xmlns:video": XMLNS_VIDEO_SCHEMA, "xmlns:image": XMLNS_IMAGE_SCHEMA, "xmlns:xsi": XMLNS_XSI, "xsi:schemaLocation": XSI_INDEX_SCHEMA_LOCATION) do
           filenames.each do |name|
             xml.element("sitemap") do
-              sitemap_name = name + (Sitemapper.config.compress ? ".gz" : "")
-              sitemap_url = [host_for_sitemap, sitemap_name].join('/')
+              sitemap_url = [host_for_sitemap, Sitemapper.stored_file_name(name)].join('/')
 
               xml.element("loc") { xml.text sitemap_url }
               xml.element("lastmod") { xml.text Time.utc.to_s("%FT%X%:z") }
@@ -55,7 +55,7 @@ module Sitemapper
           end
         end
       end
-      {"name" => DEFAULT_INDEX_FILENAME, "data" => doc}
+      {"name" => index_file_name, "data" => doc}
     end
 
     private def host_for_sitemap : String
@@ -92,10 +92,18 @@ module Sitemapper
 
     private def filename_for_page(page)
       if paginator.total_pages == 1
-        "sitemap.xml"
+        sitemap_file_name
       else
-        "sitemap#{page + 1}.xml"
+        sitemap_file_name(page + 1)
       end
+    end
+
+    private def sitemap_file_name(number : Int32? = nil) : String
+      "#{Sitemapper.config.sitemap_file_name}#{number}.xml"
+    end
+
+    private def index_file_name : String
+      "#{Sitemapper.config.index_file_name}.xml"
     end
   end
 end

@@ -22,7 +22,7 @@ module Sitemapper
     end
 
     private def write_compressed_sitemap(path, sitemap)
-      File.open([path, sitemap["name"].to_s + ".gz"].join('/'), "w") do |f|
+      File.open([path, Sitemapper.stored_file_name(sitemap["name"])].join('/'), "w") do |f|
         Compress::Gzip::Writer.open(f) do |gzip|
           gzip << sitemap["data"]
         end

@@ -19,6 +19,8 @@ module Sitemapper
     setting use_index : Bool = false
     setting host : String, example: "https://mysite.com"
     setting sitemap_host : String? = nil
+    setting sitemap_file_name : String = Sitemapper::Builder::DEFAULT_SITEMAP_FILENAME
+    setting index_file_name : String = Sitemapper::Builder::DEFAULT_INDEX_FILENAME
     setting max_urls : Int32 = 500
     setting storage : Sitemapper::Storage.class = Sitemapper::LocalStorage
     setting compress : Bool = true
@@ -28,6 +30,12 @@ module Sitemapper
 
   def self.config
     Sitemapper.settings
+  end
+
+  # The name a sitemap is actually stored under, which picks up the
+  # `.gz` extension when `config.compress` is set.
+  def self.stored_file_name(file_name : String) : String
+    config.compress ? "#{file_name}.gz" : file_name
   end
 
   # Build your sitemaps. The block arg is an instance of `Sitemapper::Builder`.
