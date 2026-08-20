@@ -48,7 +48,7 @@ module Sitemapper
     end
 
     private def filename_for_current_page : String
-      "sitemap#{@current_page}.xml"
+      sitemap_file_name(@current_page)
     end
   end
 end
