@@ -49,6 +49,8 @@ module Sitemapper
   end
 
   # Build your sitemaps, streaming each file. The block arg is an instance of `Sitemapper::Streamer`.
+  # Each sitemap is saved to your configured storage as it fills up, then the
+  # `sitemap_index.xml` is saved last. Returns the filenames that were saved.
   # Args default to the configuration, but can be overriden.
   # ```
   # Sitemapper.stream(path: "tmp/sitemaps") do |builder|
@@ -62,10 +64,10 @@ module Sitemapper
     storage : Sitemapper::Storage.class = config.storage,
     storage_path : String = config.storage_path,
     &
-  ) : Array(Hash(String, String))
+  ) : Array(String)
     builder = Sitemapper::Streamer.new(host, max_urls, use_index, storage, storage_path)
     yield builder
-    builder.generate
+    builder.finish
   end
 
   # Store your sitemap xml files.

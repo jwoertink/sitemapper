@@ -7,6 +7,7 @@ module Sitemapper
     XMLNS_XSI                 = "http://www.w3.org/2001/XMLSchema-instance"
     XSI_SCHEMA_LOCATION       = "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
     XSI_INDEX_SCHEMA_LOCATION = "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd"
+    DEFAULT_INDEX_FILENAME    = "sitemap_index.xml"
 
     getter paginator : Paginator
 
@@ -37,11 +38,15 @@ module Sitemapper
     end
 
     def generate_index : Hash(String, String)
+      build_index(@sitemaps.map { |sm| sm["name"] })
+    end
+
+    private def build_index(filenames : Array(String)) : Hash(String, String)
       doc = XML.build(indent: " ", version: "1.0", encoding: "UTF-8") do |xml|
         xml.element("sitemapindex", xmlns: XMLNS_SCHEMA, "xmlns:video": XMLNS_VIDEO_SCHEMA, "xmlns:image": XMLNS_IMAGE_SCHEMA, "xmlns:xsi": XMLNS_XSI, "xsi:schemaLocation": XSI_INDEX_SCHEMA_LOCATION) do
-          @sitemaps.each do |sm|
+          filenames.each do |name|
             xml.element("sitemap") do
-              sitemap_name = sm["name"].to_s + (Sitemapper.config.compress ? ".gz" : "")
+              sitemap_name = name + (Sitemapper.config.compress ? ".gz" : "")
               sitemap_url = [host_for_sitemap, sitemap_name].join('/')
 
               xml.element("loc") { xml.text sitemap_url }
@@ -50,8 +55,7 @@ module Sitemapper
           end
         end
       end
-      filename = "sitemap_index.xml"
-      {"name" => filename, "data" => doc}
+      {"name" => DEFAULT_INDEX_FILENAME, "data" => doc}
     end
 
     private def host_for_sitemap : String
