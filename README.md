@@ -137,6 +137,25 @@ Sitemapper.store(sitemaps, "my-prod-bucket/sitemaps")
 
 Lastly, so the searchengines know where your sitemaps are located (unless you aliased `/sitemap_index.xml`), you'll want to update your [robots.txt](http://www.robotstxt.org/) with `Sitemap: https://my-sitemap-host.com`
 
+### Streaming large sitemaps
+
+`Sitemapper.build` holds every sitemap in memory until you call `Sitemapper.store`. For a site with a lot of URLs, that can be a lot of memory. Use `Sitemapper.stream` instead and each sitemap is saved to your configured storage as soon as it fills up to `max_urls`, then released.
+
+```crystal
+Sitemapper.configure do |c|
+  c.storage      = Sitemapper::AwsStorage
+  c.storage_path = "my-prod-bucket/sitemaps"
+  c.use_index    = true
+end
+
+filenames = Sitemapper.stream do |builder|
+  User.each { |user| builder.add("/u/#{user.username}", changefreq: "daily") }
+end
+# => ["sitemap1.xml", "sitemap2.xml", "sitemap3.xml", "sitemap_index.xml"]
+```
+
+Unlike `build`, there's no `store` call to make afterwards. `stream` writes each `sitemapN.xml` as it goes, then writes the `sitemap_index.xml` last (when `use_index` is set), and returns the filenames it saved.
+
 ## Notifying Search Engines
 
 Once you have your sitemaps updated, it's usually a good idea to let the search engines know. Generally, they will crawl your site regularly anyway, but this at least gets things moving a little quicker. To do this, you can use the `ping_search_engines` method.

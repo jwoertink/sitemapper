@@ -1,12 +1,4 @@
-require "file_utils"
 require "./spec_helper"
-
-def with_tempdir(&)
-  yield("./tmp")
-  if Dir.exists?("./tmp")
-    FileUtils.rm_rf("./tmp")
-  end
-end
 
 describe Sitemapper::Storage do
   describe "with local storage" do

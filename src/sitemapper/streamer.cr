@@ -31,6 +31,22 @@ module Sitemapper
       @paginator = Paginator.new(limit: @max_urls)
     end
 
+    def finish : Array(String)
+      flush unless paginator.paths.empty?
+
+      if @use_index
+        index = generate_index
+        @storage.new([index]).save(@storage_path)
+        @filenames << index["name"]
+      end
+
+      @filenames
+    end
+
+    def generate_index : Hash(String, String)
+      build_index(@filenames)
+    end
+
     private def filename_for_current_page : String
       "sitemap#{@current_page}.xml"
     end
