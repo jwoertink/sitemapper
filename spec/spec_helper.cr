@@ -1,6 +1,5 @@
 require "spec"
 require "file_utils"
-require "webmock"
 require "../src/sitemapper"
 
 Sitemapper.configure do |settings|

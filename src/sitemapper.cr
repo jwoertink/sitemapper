@@ -86,14 +86,8 @@ module Sitemapper
     storage.save(path)
   end
 
-  # Ping Google and Bing, along with any additional engines you want.
-  # Pass in the named arg of each additional search engine. Use the `%s` placeholder
-  # for replacing the sitemap path.
-  # ```
-  # Sitemapper.ping_search_engines("https://mysite.com/sitemap.xml", fake_search: "https://fake.search/ping?sitemap=%s")
-  # ```
+  @[Deprecated("The `ping` no longer works. See each search engine for their proper methods of submitting sitemaps")]
   def self.ping_search_engines(sitemap_url : String, **additional_engines) : Nil
-    bot = Sitemapper::PingBot.new(sitemap_url)
-    bot.ping(**additional_engines)
+    # Remove after v0.11
   end
 end
