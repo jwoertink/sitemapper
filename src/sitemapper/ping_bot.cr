@@ -3,25 +3,13 @@ require "http/client"
 
 module Sitemapper
   class PingBot
-    ENGINES = {
-      google: "https://www.google.com/webmasters/tools/ping?sitemap=%s",
-      bing:   "https://www.bing.com/webmaster/ping.aspx?siteMap=%s",
-    }
-
     # The URL to your sitemap_index file
     def initialize(@sitemap_index : String)
     end
 
-    # You can add other URLs like
-    # ping(yandex: "http://blogs.yandex.ru/pings/?status=success&url=%s")
+    @[Deprecated("The `ping` no longer works. See each search engine for their proper methods of submitting sitemaps")]
     def ping(**other_engines) : Nil
-      ENGINES.merge(other_engines).each do |_engine, url|
-        sitemap_url = String.build do |str|
-          str << (url % URI.encode_www_form(@sitemap_index))
-        end
-
-        HTTP::Client.get(sitemap_url)
-      end
+      # Remove after v0.11
     end
   end
 end
