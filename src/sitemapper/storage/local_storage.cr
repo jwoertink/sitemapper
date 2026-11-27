@@ -16,14 +16,14 @@ module Sitemapper
     end
 
     private def write_sitemap(path, sitemap)
-      File.open([path, sitemap["name"]].join('/'), "w") do |f|
-        f << sitemap["data"]
+      File.open([path, sitemap["name"]].join('/'), "w") do |io|
+        io << sitemap["data"]
       end
     end
 
     private def write_compressed_sitemap(path, sitemap)
-      File.open([path, Sitemapper.stored_file_name(sitemap["name"])].join('/'), "w") do |f|
-        Compress::Gzip::Writer.open(f) do |gzip|
+      File.open([path, Sitemapper.stored_file_name(sitemap["name"])].join('/'), "w") do |io|
+        Compress::Gzip::Writer.open(io) do |gzip|
           gzip << sitemap["data"]
         end
       end

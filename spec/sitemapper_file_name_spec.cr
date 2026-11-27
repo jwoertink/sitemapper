@@ -80,7 +80,7 @@ describe "file name configuration" do
           end
 
           written.should eq ["urls1.xml", "urls2.xml", "urls3.xml", "urls_index.xml"]
-          Dir.glob("#{dir}/*.xml").map { |f| File.basename(f) }.sort!.should eq [
+          Dir.glob("#{dir}/*.xml").map { |file| File.basename(file) }.sort!.should eq [
             "urls1.xml",
             "urls2.xml",
             "urls3.xml",
@@ -112,7 +112,7 @@ describe "file name configuration" do
             3.times { |i| builder.add("/posts/#{i}") }
           end
 
-          Dir.glob("#{dir}/*.gz").map { |f| File.basename(f) }.sort!.should eq [
+          Dir.glob("#{dir}/*.gz").map { |file| File.basename(file) }.sort!.should eq [
             "urls1.xml.gz",
             "urls2.xml.gz",
             "urls_index.xml.gz",

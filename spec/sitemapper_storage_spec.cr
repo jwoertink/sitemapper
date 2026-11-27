@@ -7,7 +7,7 @@ describe Sitemapper::Storage do
         with_tempdir do |dir|
           storage = Sitemapper::LocalStorage.new([{"name" => "sitemap.xml", "data" => "<XML></XML>"}])
           storage.save(dir)
-          File.exists?("#{dir}/sitemap.xml.gz").should eq true
+          File.exists?("#{dir}/sitemap.xml.gz").should be_true
           File.size("#{dir}/sitemap.xml.gz").should be > 1
         end
       end
@@ -19,7 +19,7 @@ describe Sitemapper::Storage do
           with_tempdir do |dir|
             storage = Sitemapper::LocalStorage.new([{"name" => "sitemap.xml", "data" => "<XML></XML>"}])
             storage.save(dir)
-            File.exists?("#{dir}/sitemap.xml").should eq true
+            File.exists?("#{dir}/sitemap.xml").should be_true
             File.size("#{dir}/sitemap.xml").should be > 1
           end
         end
