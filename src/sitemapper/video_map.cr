@@ -22,6 +22,7 @@ module Sitemapper
     platform : Tuple(String, String)? = nil, # {"allow", "web mobile"} or {"deny", "mobile tv"}
     live : String = "no" do                  # "yes" or "no"
 
+    # ameba:disable Metrics/CyclomaticComplexity
     def render_xml(xml : XML::Builder)
       xml.element("video:video") do
         xml.element("video:thumbnail_loc") { xml.text(thumbnail_loc) }

@@ -39,7 +39,7 @@ module Sitemapper
     end
 
     def generate_index : Hash(String, String)
-      build_index(@sitemaps.map { |sm| sm["name"] })
+      build_index(@sitemaps.map { |sitemap| sitemap["name"] })
     end
 
     private def build_index(filenames : Array(String)) : Hash(String, String)
