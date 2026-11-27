@@ -1,4 +1,5 @@
 require "awscr-s3"
+require "compress/gzip"
 require "../aws_storage_config"
 
 module Sitemapper
@@ -22,9 +23,27 @@ module Sitemapper
     # `path` is the bucket path
     # "my-prod-bucket/sitemaps/mycoolsite"
     def save(path : String) : Nil
-      sitemaps.each do |sitemap|
-        client.put_object(path, sitemap["name"].to_s, sitemap["data"].to_s, {"x-amz-acl" => "public-read", "Content-Type" => "application/xml"})
+      if Sitemapper.config.compress
+        sitemaps.each do |sitemap|
+          put_compressed_sitemap(path, sitemap)
+        end
+      else
+        sitemaps.each do |sitemap|
+          put_sitemap(path, sitemap)
+        end
       end
+    end
+
+    private def put_sitemap(path, sitemap)
+      client.put_object(path, sitemap["name"], sitemap["data"], {"x-amz-acl" => "public-read", "Content-Type" => "application/xml"})
+    end
+
+    private def put_compressed_sitemap(path, sitemap)
+      io = IO::Memory.new
+      Compress::Gzip::Writer.open(io) do |gzip|
+        gzip << sitemap["data"]
+      end
+      client.put_object(path, Sitemapper.stored_file_name(sitemap["name"]), io.to_slice, {"x-amz-acl" => "public-read", "Content-Type" => "application/gzip"})
     end
   end
 end

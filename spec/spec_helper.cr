@@ -1,6 +1,7 @@
 require "spec"
 require "file_utils"
 require "../src/sitemapper"
+require "./support/**"
 
 Sitemapper.configure do |settings|
   settings.host = "http://example.com"
